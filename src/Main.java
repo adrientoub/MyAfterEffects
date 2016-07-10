@@ -1,3 +1,4 @@
+import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 import view.MainWindow;
 
 /**
@@ -5,7 +6,7 @@ import view.MainWindow;
  */
 public class Main {
     public static void main(String[] args) {
-        MainWindow mw = new MainWindow();
-        mw.display();
+        new NativeDiscovery().discover();
+        MainWindow.getMainWindow().display();
     }
 }

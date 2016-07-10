@@ -1,5 +1,7 @@
 package controller;
 
+import view.MainWindow;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,6 +14,10 @@ public class MenuBarController implements ActionListener {
         switch (actionEvent.getActionCommand()) {
             case "Exit":
                 System.exit(0);
+                break;
+            case "New":
+                MainWindow.getMainWindow().getTabbedView().newTab();
+                break;
         }
     }
 }
