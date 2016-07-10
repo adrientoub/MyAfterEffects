@@ -7,8 +7,10 @@ import javax.swing.*;
  */
 public class MainWindow extends JFrame {
     private TabbedView tabbedView = new TabbedView();
+    private MenuBar menuBar = new MenuBar();
 
     public MainWindow() {
+        setJMenuBar(menuBar);
         setContentPane(tabbedView);
         setTitle("MyAfterEffects");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
