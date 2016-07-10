@@ -1,0 +1,36 @@
+group 'myaftereffects'
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+
+mainClassName = 'Main'
+sourceSets.main.java.srcDirs = ['src']
+
+repositories {
+    mavenCentral()
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+dependencies {
+    compile group: 'uk.co.caprica', name: 'vlcj', version: '3.10.1'
+}
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': mainClassName
+        )
+    }
+}
+task copyDepJars(type: Copy) {
+    from configurations.compile
+    into 'build/libs'
+}
+build.finalizedBy(copyDepJars)
