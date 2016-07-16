@@ -22,6 +22,11 @@ public final class MyAfterEffectsApp extends Application {
      */
     protected void start(final JFrame frame) {
         frame.setTitle("MyAfterEffects");
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
 
         // Set the menu bar of the application frame.
         frame.setJMenuBar(new MenuView(this).render());
