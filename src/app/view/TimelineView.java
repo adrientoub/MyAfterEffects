@@ -5,16 +5,15 @@ package app.view;
 
 // General utilities
 
-import app.controller.TodoController;
+import app.controller.TimelineController;
 import app.framework.Application;
+import app.framework.Timeline;
 import app.framework.View;
-import app.model.TodoModel;
-import app.model.TodoModel.TodoItem;
+import app.model.TimelineModel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.List;
 
 // AWT utilities
 // Swing utilities
@@ -27,7 +26,7 @@ import java.util.List;
  * The {@link TimelineView} class takes care of rendering the view for creating,
  * displaying, and completing todo items.
  */
-public final class TimelineView extends View<TodoModel, TodoController> {
+public final class TimelineView extends View<TimelineModel, TimelineController> {
   /**
    * Initialize a new {@link TimelineView} instance for the specified
    * {@link Application}.
@@ -38,8 +37,8 @@ public final class TimelineView extends View<TodoModel, TodoController> {
   public TimelineView(final Application application) {
     super(application);
 
-    this.model(new TodoModel(application));
-    this.controller(new TodoController(application));
+    this.model(new TimelineModel(application));
+    this.controller(new TimelineController(application));
   }
 
   /**
@@ -49,15 +48,15 @@ public final class TimelineView extends View<TodoModel, TodoController> {
     JPanel viewPanel = new JPanel(new BorderLayout());
     viewPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-    JList<TodoItem> todosList = new JList<>(this.model().todos());
+    JList<Timeline> todosList = new JList<Timeline>(this.model().timelines());
 
-    this.model().on("todos:changed", (TodoItem todo) -> {
-      todosList.setListData(this.model().todos());
+    this.model().on("timelines:changed", (Timeline timeline) -> {
+      todosList.setListData(this.model().timelines());
     });
 
-    this.controller().create("Layer 1");
-    this.controller().create("Layer 2");
-    this.controller().create("Layer 3");
+    this.controller().create(new Timeline("Layer 1"));
+    this.controller().create(new Timeline("Layer 2"));
+    this.controller().create(new Timeline("Layer 3"));
 
     JScrollPane todosPane = new JScrollPane(todosList);
     viewPanel.add(todosPane, BorderLayout.CENTER);

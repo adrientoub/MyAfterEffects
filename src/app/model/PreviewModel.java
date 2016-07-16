@@ -3,21 +3,22 @@
  */
 package app.model;
 
+import app.framework.Application;
+import app.framework.Model;
+
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
 // Framework
-import app.framework.Application;
-import app.framework.Model;
 
 /**
  * Example {@link Model} using the MVC micro-framework presented in
  * {@link app.framework}.
  */
-public final class TodoModel extends Model {
+public final class PreviewModel extends Model {
   private Collection<TodoItem> todos = new LinkedHashSet<>();
 
-  public TodoModel(final Application application) {
+  public PreviewModel(final Application application) {
     super(application);
   }
 

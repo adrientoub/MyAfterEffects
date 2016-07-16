@@ -12,7 +12,6 @@ import app.framework.Application;
 // Views
 import app.view.PreviewView;
 import app.view.TimelineView;
-import app.view.TodoView;
 import app.view.MenuView;
 
 import java.awt.*;
@@ -49,20 +48,17 @@ public final class MyAfterEffectsApp extends Application {
     }
     c.fill = GridBagConstraints.HORIZONTAL;
     c.gridx = 0;
-    c.gridy = 0;
     frame.add(button, c);
 
     button = new JButton("Button 2");
     c.fill = GridBagConstraints.HORIZONTAL;
     c.weightx = 0.5;
     c.gridx = 1;
-    c.gridy = 0;
     frame.add(button, c);
 
     c.fill = GridBagConstraints.HORIZONTAL;
     c.weightx = 0.5;
     c.gridx = 2;
-    c.gridy = 0;
     frame.add(new PreviewView(this).render(), c);
 
     button = new JButton("Long-Named Button 4");

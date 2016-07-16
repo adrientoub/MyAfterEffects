@@ -5,11 +5,11 @@ package app.view;
 
 // General utilities
 
-import app.controller.TodoController;
+import app.controller.PreviewController;
 import app.framework.Application;
 import app.framework.View;
-import app.model.TodoModel;
-import app.model.TodoModel.TodoItem;
+import app.model.PreviewModel;
+import app.model.TimelineModel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -30,7 +30,7 @@ import java.io.IOException;
  * The {@link PreviewView} class takes care of rendering the view for creating,
  * displaying, and completing todo items.
  */
-public final class PreviewView extends View<TodoModel, TodoController> {
+public final class PreviewView extends View<PreviewModel, PreviewController> {
 
   BufferedImage image;
 
@@ -44,8 +44,8 @@ public final class PreviewView extends View<TodoModel, TodoController> {
   public PreviewView(final Application application) {
     super(application);
 
-    this.model(new TodoModel(application));
-    this.controller(new TodoController(application));
+    this.model(new PreviewModel(application));
+    this.controller(new PreviewController(application));
   }
 
   /**
@@ -63,24 +63,6 @@ public final class PreviewView extends View<TodoModel, TodoController> {
 
     JLabel picLabel = new JLabel(new ImageIcon(image));
     viewPanel.add(picLabel);
-
-
-    /*JList<TodoItem> todosList = new JList<>(this.model().todos());
-
-    this.model().on("todos:changed", (TodoItem todo) -> {
-      todosList.setListData(this.model().todos());
-    });
-
-    this.controller().create("Layer 1");
-    this.controller().create("Layer 2");
-    this.controller().create("Layer 3");
-
-    JScrollPane todosPane = new JScrollPane(todosList);
-    viewPanel.add(todosPane, BorderLayout.CENTER);
-
-    JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-    actionsPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
-    viewPanel.add(actionsPanel, BorderLayout.SOUTH);*/
 
     return viewPanel;
   }
