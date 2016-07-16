@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app.view;
+package view;
 
 // AWT utilities
 import java.awt.Toolkit;
@@ -16,8 +16,8 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 // Framework
-import app.framework.Application;
-import app.framework.View;
+import framework.Application;
+import framework.View;
 
 public final class MenuView extends View {
 

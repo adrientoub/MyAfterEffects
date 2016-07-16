@@ -1,14 +1,14 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app.view;
+package view;
 
 // General utilities
 
-import app.controller.PreviewController;
-import app.framework.Application;
-import app.framework.View;
-import app.model.PreviewModel;
+import controller.PreviewController;
+import framework.Application;
+import framework.View;
+import model.PreviewModel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

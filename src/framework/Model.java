@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app.framework;
+package framework;
 
 // Functional utilities
 import java.util.function.Consumer;

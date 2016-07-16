@@ -1,20 +1,20 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app.controller;
+package controller;
 
 // General utilities
 
 // Framework
-import app.framework.Application;
-import app.framework.Controller;
+import framework.Application;
+import framework.Controller;
 
 // Models
-import app.framework.Timeline;
-import app.model.TimelineModel;
+import framework.Timeline;
+import model.TimelineModel;
 
 // Views
-import app.view.TimelineView;
+import view.TimelineView;
 
 public final class TimelineController extends Controller<TimelineModel, TimelineView> {
 

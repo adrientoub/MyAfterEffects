@@ -1,72 +1,106 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app.framework;
+package framework;
 
 // Functional utilities
 import java.util.function.Consumer;
 
-/**
- * The {@link Controller} class describes all the basic functionality of a
- * controller within the MVC architecture.
- * @param <M> The type of model that the controller will operate on.
- * @param <V> The type of view that the controller will operate on.
- */
-public abstract class Controller<M extends Model, V extends View> {
+// Swing utilities
+import javax.swing.JComponent;
 
+/**
+ * The {@link View} class describes all the basic functionality of a view
+ * within the MVC architecture.
+ *
+ * <p>
+ * From Wikipedia:
+ *
+ * <blockquote>
+ * A view requests information from the model that it uses to generate an output
+ * representation to the user.
+ * </blockquote>
+ *
+ * @see <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">
+ *      http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller</a>
+ *
+ * @param <M> The type of model that the view will operate on. This can be
+ *            omitted if no model will ever be operated on by the view.
+ * @param <C> The type of controller that will operate on the view. This can be
+ *            omitted if no controller will ever operate on the view.
+ */
+public abstract class View<M extends Model, C extends Controller> {
+  /**
+   * The {@link Application} that the {@link View} is part of.
+   */
   private Application application;
 
+  /**
+   * The {@link Model} that the {@link View} operates on.
+   */
   private M model;
 
-  private V view;
+  /**
+   * The {@link Controller} operating on the {@link View}.
+   */
+  private C controller;
 
   /**
-   * Initialize a new {@link Controller} instance for the specified
+   * Initialize a new {@link View} instance for the specified
    * {@link Application}.
    *
-   * @param application The {@link Application} that the {@link Controller} is
+   * @param application The {@link Application} that the {@link View} is
    *                    associated with.
    */
-  public Controller(final Application application) {
+  public View(final Application application) {
     if (application == null) {
       throw new IllegalArgumentException(
-        "An Application must be specified when initialising a Controller."
+        "An Application must be specified when initialising a View."
       );
     }
 
     this.application = application;
   }
 
+  /**
+   * Access the {@link Application} that the {@link View} is associated with.
+   *
+   * @return The {@link Application} that the {@link View} is associated with.
+   */
   protected final Application application() {
     return this.application;
   }
 
+  /**
+   * Access the {@link Model} that the {@link View} renders.
+   *
+   * @return The {@link Model} that the {@link View} renders.
+   */
   protected final M model() {
     return this.model;
   }
-
   /**
-   * Set the {@link Model} that the {@link Controller} operates on.
+   * Set the {@link Model} that the {@link View} operates on.
    *
-   * @param model The {@link Model} that the {@link Controller} operates on.
+   * @param model The {@link Model} that the {@link View} operates on.
    */
   @SuppressWarnings("unchecked")
-  final void model(final M model) {
+  protected final void model(final M model) {
     if (model == null) {
       throw new NullPointerException();
     }
 
     if (this.model != null) {
       throw new IllegalStateException(
-        "A Model has already been set on the Controller."
+        "A Model has already been set on the View."
       );
     }
 
     this.model = model;
 
-    if (this.view != null) {
+    if (this.controller != null) {
       try {
-        this.view.model(this.model);
+        this.controller.model(model);
       }
       catch (IllegalStateException ex) {
         ;
@@ -74,26 +108,35 @@ public abstract class Controller<M extends Model, V extends View> {
     }
   }
 
-  protected final V view() {
-    return this.view;
+  /**
+   * Access the {@link Controller} operating on the {@link View}.
+   *
+   * @return The {@link Controller} operating on the {@link View}.
+   */
+  protected final C controller() {
+    return this.controller;
   }
-
+  /**
+   * Set the {@link Controller} operating on the {@link View}.
+   *
+   * @param controller The controller operating on the view.
+   */
   @SuppressWarnings("unchecked")
-  final void view(final V view) {
-    if (view == null) {
+  protected final void controller(final C controller) {
+    if (controller == null) {
       throw new NullPointerException();
     }
 
-    if (this.view != null) {
+    if (this.controller != null) {
       throw new IllegalStateException(
-        "A View has already been set on the Controller."
+        "A Controller has already been set on the View."
       );
     }
 
-    this.view = view;
+    this.controller = controller;
 
     try {
-      this.view.controller(this);
+      this.controller.view(this);
     }
     catch (IllegalStateException ex) {
       ;
@@ -101,13 +144,24 @@ public abstract class Controller<M extends Model, V extends View> {
 
     if (this.model != null) {
       try {
-        this.view.model(this.model);
+        this.controller.model(this.model);
       }
       catch (IllegalStateException ex) {
         ;
       }
     }
   }
+
+  /**
+   * Render the {@link View} as a Swing component.
+   *
+   * <p>
+   * This method must be implemented by subclasses and is where the {@link View}
+   * is rendered as a Swing component.
+   *
+   * @return The rendered Swing component.
+   */
+  abstract public JComponent render();
 
   /**
    * Emit an event with the specified name.
@@ -130,7 +184,10 @@ public abstract class Controller<M extends Model, V extends View> {
    *                  up by a {@link Consumer}.
    */
   @SuppressWarnings("unchecked")
-  protected final <T extends Object> boolean emit(final String event, final T data) {
+  protected final <T extends Object> boolean emit(
+    final String event,
+    final T data
+  ) {
     return this.application.radio().emit(event, data);
   }
 

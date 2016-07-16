@@ -1,4 +1,4 @@
-package app.framework;
+package framework;
 
 /**
  * Created by Damien on 16/07/2016.

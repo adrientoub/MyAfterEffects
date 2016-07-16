@@ -1,15 +1,16 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app.model;
+package model;
+
+import framework.Application;
+import framework.Model;
+import framework.Timeline;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
 // Framework
-import app.framework.Application;
-import app.framework.Model;
-import app.framework.Timeline;
 
 public final class TimelineModel extends Model {
   private Collection<Timeline> timelines = new LinkedHashSet<>();

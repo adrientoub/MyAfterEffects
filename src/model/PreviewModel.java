@@ -1,18 +1,16 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app.model;
+package model;
 
-import app.framework.Application;
-import app.framework.Model;
+import framework.Application;
+import framework.Model;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
-import java.util.Collection;
-import java.util.LinkedHashSet;
+
 
 public final class PreviewModel extends Model {
   BufferedImage image;

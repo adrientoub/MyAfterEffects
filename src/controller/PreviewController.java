@@ -1,14 +1,14 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app.controller;
+package controller;
 
 // General utilities
 
-import app.framework.Application;
-import app.framework.Controller;
-import app.model.PreviewModel;
-import app.view.PreviewView;
+import framework.Application;
+import framework.Controller;
+import model.PreviewModel;
+import view.PreviewView;
 
 public final class PreviewController extends Controller<PreviewModel, PreviewView> {
 

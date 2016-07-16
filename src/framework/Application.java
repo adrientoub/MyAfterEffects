@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app.framework;
+package framework;
 
 // General utilities
 import java.awt.*;

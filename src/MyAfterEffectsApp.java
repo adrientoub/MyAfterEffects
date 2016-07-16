@@ -1,26 +1,18 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app;
 
 // Swing utilities
+import framework.Application;
+import view.MenuView;
+import view.PreviewView;
+import view.TimelineView;
+
 import javax.swing.*;
-
-// Framework
-import app.framework.Application;
-
-// Views
-import app.view.PreviewView;
-import app.view.TimelineView;
-import app.view.MenuView;
 
 import java.awt.*;
 
-/**
- * An example of a simple "Todo" application written using the MVC micro-
- * framework presented in {@link app.framework}.
- */
-public final class MyAfterEffectsApp extends Application {
+ public final class MyAfterEffectsApp extends Application {
   /**
    * Start the {@link MyAfterEffectsApp}.
    *

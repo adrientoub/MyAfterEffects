@@ -1,15 +1,15 @@
 /**
  * Copyright (C) 2015 Kasper Kronborg Isager.
  */
-package app.view;
+package view;
 
 // General utilities
 
-import app.controller.TimelineController;
-import app.framework.Application;
-import app.framework.Timeline;
-import app.framework.View;
-import app.model.TimelineModel;
+import controller.TimelineController;
+import framework.Application;
+import framework.Timeline;
+import framework.View;
+import model.TimelineModel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
