@@ -6,6 +6,7 @@
 import framework.Application;
 import view.MenuView;
 import view.PreviewView;
+import view.TabbedView;
 import view.TimelineView;
 
 import javax.swing.*;
@@ -46,14 +47,13 @@ import java.awt.*;
     c.fill = GridBagConstraints.HORIZONTAL;
     c.weightx = 0.5;
     c.gridx = 1;
-    frame.add(button, c);
+    frame.add(new TabbedView(this).render(), c);
 
     c.fill = GridBagConstraints.HORIZONTAL;
     c.weightx = 0.5;
     c.gridx = 2;
     frame.add(new PreviewView(this).render(), c);
 
-    button = new JButton("Long-Named Button 4");
     c.fill = GridBagConstraints.HORIZONTAL;
     c.ipady = 40;      //make this component tall
     c.weightx = 0.0;

@@ -34,8 +34,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     JPanel viewPanel = new JPanel(new BorderLayout());
     viewPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-    this.controller().create(new Timeline("Layer 1"));
-
     JScrollPane todosPane = new JScrollPane(todosList);
     viewPanel.add(todosPane, BorderLayout.CENTER);
 
