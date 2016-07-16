@@ -30,12 +30,8 @@ import java.awt.*;
     frame.setLayout(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();
 
-    button = new JButton("Button 1");
-
     c.weightx = 0.5;
     c.fill = GridBagConstraints.HORIZONTAL;
-    c.gridx = 0;
-    frame.add(button, c);
 
     c.gridx = 1;
     frame.add(new TabbedView(this).render(), c);
