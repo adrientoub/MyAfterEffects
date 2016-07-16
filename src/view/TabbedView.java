@@ -32,9 +32,9 @@ public final class TabbedView extends View<TabbedModel, TabbedController> {
   private void handle(File f) {
 
     /* TODO Adrien, Still use libvlc */
-    EmbeddedMediaPlayerComponent mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
+    /*EmbeddedMediaPlayerComponent mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
     tab.addTab("Video", mediaPlayerComponent);
-    mediaPlayerComponent.getMediaPlayer().playMedia(f.getAbsolutePath());
+    mediaPlayerComponent.getMediaPlayer().playMedia(f.getAbsolutePath());*/
 
   }
 

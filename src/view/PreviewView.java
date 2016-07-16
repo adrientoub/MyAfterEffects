@@ -31,11 +31,25 @@ import java.io.IOException;
  */
 public final class PreviewView extends View<PreviewModel, PreviewController> {
 
+  ImagePanel imagePanel;
+
   public PreviewView(final Application application) {
     super(application);
 
     this.model(new PreviewModel(application));
     this.controller(new PreviewController(application));
+
+    imagePanel = new ImagePanel(this.model().image());
+
+    this.on("menu:new", this::handle);
+  }
+
+  private void handle(File f) {
+    try {
+      imagePanel.setImage(ImageIO.read(f));
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
+    }
   }
 
   /**
@@ -45,8 +59,7 @@ public final class PreviewView extends View<PreviewModel, PreviewController> {
     JPanel viewPanel = new JPanel(new BorderLayout());
     viewPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-    JLabel picLabel = new JLabel(new ImageIcon(this.model().image()));
-    viewPanel.add(picLabel);
+    viewPanel.add(imagePanel);
 
     return viewPanel;
   }
