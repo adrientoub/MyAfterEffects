@@ -30,14 +30,11 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
     JList<Timeline> todosList = new JList<Timeline>(this.model().timelines());
 
-    this.model().on("timelines:changed", (Timeline timeline) -> {
-      todosList.setListData(this.model().timelines());
-    });
-
     this.controller().create(new Timeline("Layer 1"));
     this.controller().create(new Timeline("Layer 2"));
     this.controller().create(new Timeline("Layer 3"));
 
+    this.on("menu:new", (file) -> file.)
     JScrollPane todosPane = new JScrollPane(todosList);
     viewPanel.add(todosPane, BorderLayout.CENTER);
 

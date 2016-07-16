@@ -79,11 +79,7 @@ public abstract class View<M extends Model, C extends Controller> {
   protected final M model() {
     return this.model;
   }
-  /**
-   * Set the {@link Model} that the {@link View} operates on.
-   *
-   * @param model The {@link Model} that the {@link View} operates on.
-   */
+
   @SuppressWarnings("unchecked")
   protected final void model(final M model) {
     if (model == null) {
@@ -108,19 +104,10 @@ public abstract class View<M extends Model, C extends Controller> {
     }
   }
 
-  /**
-   * Access the {@link Controller} operating on the {@link View}.
-   *
-   * @return The {@link Controller} operating on the {@link View}.
-   */
   protected final C controller() {
     return this.controller;
   }
-  /**
-   * Set the {@link Controller} operating on the {@link View}.
-   *
-   * @param controller The controller operating on the view.
-   */
+
   @SuppressWarnings("unchecked")
   protected final void controller(final C controller) {
     if (controller == null) {

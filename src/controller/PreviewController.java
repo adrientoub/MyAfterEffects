@@ -3,8 +3,6 @@
  */
 package controller;
 
-// General utilities
-
 import framework.Application;
 import framework.Controller;
 import model.PreviewModel;

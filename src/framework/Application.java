@@ -15,9 +15,6 @@ public abstract class Application {
    */
   private Radio radio = new Radio();
 
-  /**
-   * Initialize a new {@link Application} instance.
-   */
   public Application() {
     // Construct the main frame of the application.
     JFrame frame = new JFrame();

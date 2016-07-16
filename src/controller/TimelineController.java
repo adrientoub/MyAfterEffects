@@ -3,17 +3,10 @@
  */
 package controller;
 
-// General utilities
-
-// Framework
 import framework.Application;
 import framework.Controller;
-
-// Models
 import framework.Timeline;
 import model.TimelineModel;
-
-// Views
 import view.TimelineView;
 
 public final class TimelineController extends Controller<TimelineModel, TimelineView> {
@@ -22,6 +15,7 @@ public final class TimelineController extends Controller<TimelineModel, Timeline
     super(application);
 
     this.on("timeline:clear", (data) -> this.clear());
+    this.on("menu:new", (File f) -> this.clear());
   }
 
   public void create(final Timeline timeline) throws NullPointerException {
