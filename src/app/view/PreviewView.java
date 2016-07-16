@@ -9,7 +9,6 @@ import app.controller.PreviewController;
 import app.framework.Application;
 import app.framework.View;
 import app.model.PreviewModel;
-import app.model.TimelineModel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,15 +31,6 @@ import java.io.IOException;
  */
 public final class PreviewView extends View<PreviewModel, PreviewController> {
 
-  BufferedImage image;
-
-  /**
-   * Initialize a new {@link PreviewView} instance for the specified
-   * {@link Application}.
-   *
-   * @param application The {@link Application} that the {@link PreviewView} is
-   *                    associated with.
-   */
   public PreviewView(final Application application) {
     super(application);
 
@@ -55,13 +45,7 @@ public final class PreviewView extends View<PreviewModel, PreviewController> {
     JPanel viewPanel = new JPanel(new BorderLayout());
     viewPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-    try {
-      image = ImageIO.read(new File("assets/preview.png"));
-    } catch (IOException ex) {
-      System.err.println(ex.getMessage());
-    }
-
-    JLabel picLabel = new JLabel(new ImageIcon(image));
+    JLabel picLabel = new JLabel(new ImageIcon(this.model().image()));
     viewPanel.add(picLabel);
 
     return viewPanel;

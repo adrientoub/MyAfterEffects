@@ -15,25 +15,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-// AWT utilities
-// Swing utilities
-// Swing borders
-// Framework
-// Models
-// Controllers
-
-/**
- * The {@link TimelineView} class takes care of rendering the view for creating,
- * displaying, and completing todo items.
- */
 public final class TimelineView extends View<TimelineModel, TimelineController> {
-  /**
-   * Initialize a new {@link TimelineView} instance for the specified
-   * {@link Application}.
-   *
-   * @param application The {@link Application} that the {@link TimelineView} is
-   *                    associated with.
-   */
+
   public TimelineView(final Application application) {
     super(application);
 
@@ -41,9 +24,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     this.controller(new TimelineController(application));
   }
 
-  /**
-   * Render the {@link TimelineView}.
-   */
   public JPanel render() {
     JPanel viewPanel = new JPanel(new BorderLayout());
     viewPanel.setBorder(new EmptyBorder(10, 10, 10, 10));

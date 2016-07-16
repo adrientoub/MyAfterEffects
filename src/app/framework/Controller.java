@@ -9,37 +9,15 @@ import java.util.function.Consumer;
 /**
  * The {@link Controller} class describes all the basic functionality of a
  * controller within the MVC architecture.
- *
- * <p>
- * From Wikipedia:
- *
- * <blockquote>
- * A controller can send commands to the model to update the model's state
- * (e.g., editing a document). It can also send commands to its associated view
- * to change the view's presentation of the model (e.g., by scrolling through a
- * document).
- * </blockquote>
- *
- * @see <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">
- *      http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller</a>
- *
  * @param <M> The type of model that the controller will operate on.
  * @param <V> The type of view that the controller will operate on.
  */
 public abstract class Controller<M extends Model, V extends View> {
-  /**
-   * The {@link Application} that the {@link Controller} is part of.
-   */
+
   private Application application;
 
-  /**
-   * The {@link Model} that the {@link Controller} operates on.
-   */
   private M model;
 
-  /**
-   * The {@link View} that the {@link Controller} operates on.
-   */
   private V view;
 
   /**
@@ -59,22 +37,10 @@ public abstract class Controller<M extends Model, V extends View> {
     this.application = application;
   }
 
-  /**
-   * Access the {@link Application} that the {@link Controller} is associated
-   * with.
-   *
-   * @return The {@link Application} that the {@link Controller} is associated
-   *         with.
-   */
   protected final Application application() {
     return this.application;
   }
 
-  /**
-   * Access the {@link Model} that the {@link Controller} operates on.
-   *
-   * @return The {@link Model} that the {@link Controller} operates on.
-   */
   protected final M model() {
     return this.model;
   }
@@ -108,20 +74,10 @@ public abstract class Controller<M extends Model, V extends View> {
     }
   }
 
-  /**
-   * Access the {@link View} that the {@link Controller} operates on.
-   *
-   * @return The {@link View} that the {@link Controller} operates on.
-   */
   protected final V view() {
     return this.view;
   }
 
-  /**
-   * Set the {@link View} that the {@link Controller} operates on.
-   *
-   * @param view  The {@link View} that the {@link Controller} operates on.
-   */
   @SuppressWarnings("unchecked")
   final void view(final V view) {
     if (view == null) {

@@ -11,10 +11,6 @@ import app.framework.Application;
 import app.framework.Model;
 import app.framework.Timeline;
 
-/**
- * Example {@link Model} using the MVC micro-framework presented in
- * {@link app.framework}.
- */
 public final class TimelineModel extends Model {
   private Collection<Timeline> timelines = new LinkedHashSet<>();
 
