@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.boofcv:jcodec:0.24.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.boofcv/jcodec/0.24.1/b80ecc31f56c41c80410c60949184ecacee0bf50/jcodec-0.24.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.boofcv/jcodec/0.24.1/c0bc687632c2c5b773751844900a33419477e3d5/jcodec-0.24.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.boofcv/jcodec/0.24.1/94bfcfa11b0e81849dae09f97c288cd721e3388a/jcodec-0.24.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

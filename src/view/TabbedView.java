@@ -1,48 +1,80 @@
-/**
- * Copyright (C) 2015 Kasper Kronborg Isager.
- */
 package view;
-
-// General utilities
 
 import controller.TabbedController;
 import framework.Application;
 import framework.View;
 import model.TabbedModel;
-import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
+import org.jcodec.api.FrameGrab;
+import org.jcodec.api.JCodecException;
+import org.jcodec.common.model.ColorSpace;
+import org.jcodec.common.model.Picture;
+import org.jcodec.common.model.Picture8Bit;
+import org.jcodec.scale.ColorUtil;
+import org.jcodec.scale.Transform;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.File;
+import java.io.IOException;
 
 public final class TabbedView extends View<TabbedModel, TabbedController> {
+    private JTabbedPane tab;
 
-  private JTabbedPane tab;
+    public TabbedView(final Application application) {
+        super(application);
+        tab = new JTabbedPane();
 
-  public TabbedView(final Application application) {
-    super(application);
-    tab = new JTabbedPane();
+        this.model(new TabbedModel(application));
+        this.controller(new TabbedController(application));
 
-    this.model(new TabbedModel(application));
-    this.controller(new TabbedController(application));
+        this.on("menu:new", this::handle);
+    }
 
-    this.on("menu:new", this::handle);
-  }
 
-  private void handle(File f) {
+    public static BufferedImage toBufferedImage(Picture src) {
+        if (src.getColor() != ColorSpace.RGB) {
+            Transform transform = ColorUtil.getTransform(src.getColor(), ColorSpace.RGB);
+            Picture rgb = Picture.create(src.getWidth(), src.getHeight(), ColorSpace.RGB, src.getCrop());
+            transform.transform(src, rgb);
+            src = rgb;
+        }
 
-    /* TODO Adrien, Still use libvlc */
-    /*EmbeddedMediaPlayerComponent mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
-    tab.addTab("Video", mediaPlayerComponent);
-    mediaPlayerComponent.getMediaPlayer().playMedia(f.getAbsolutePath());*/
+        BufferedImage dst = new BufferedImage(src.getCroppedWidth(), src.getCroppedHeight(),
+                BufferedImage.TYPE_3BYTE_BGR);
 
-  }
+        toBufferedImage(src, dst);
 
-  public JPanel render() {
-    JPanel viewPanel = new JPanel(new BorderLayout());
-    tab.addTab("Test", new JLabel("Hello, I am a tab"));
-    viewPanel.add(tab);
+        return dst;
+    }
 
-    return viewPanel;
-  }
+    public static void toBufferedImage(Picture src, BufferedImage dst) {
+        byte[] data = ((DataBufferByte) dst.getRaster().getDataBuffer()).getData();
+        int[] srcData = src.getPlaneData(0);
+        for (int i = 0; i < data.length; i++) {
+            data[i] = (byte) srcData[i];
+        }
+    }
+
+    private void handle(File f) {
+        int frameNumber = 150;
+        try {
+            Picture picture = FrameGrab.getNativeFrame(f, frameNumber);
+            BufferedImage bufferedImage = toBufferedImage(picture);
+            tab.addTab("Video", new ImagePanel(bufferedImage));
+            tab.repaint();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JCodecException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public JPanel render() {
+        JPanel viewPanel = new JPanel(new BorderLayout());
+        viewPanel.add(tab);
+
+        return viewPanel;
+    }
 }

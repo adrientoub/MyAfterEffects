@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.ejml:equation:0.29">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ejml/equation/0.29/7aa8d21a40e9b8dcb0f6cb7bdcea921239e5863c/equation-0.29.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ejml/equation/0.29/170a6f12488649d9f687f0c010803bdcff455261/equation-0.29-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ejml/equation/0.29/bb059a5471e0ab57bfccc0b8cd89ed1d968c3f67/equation-0.29-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
