@@ -14,27 +14,28 @@ import model.TimelineModel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.File;
 
 public final class TimelineView extends View<TimelineModel, TimelineController> {
+
+  JList<Timeline> todosList;
 
   public TimelineView(final Application application) {
     super(application);
 
     this.model(new TimelineModel(application));
     this.controller(new TimelineController(application));
+
+    todosList = new JList<>(this.model().timelines());
+    this.on("timelines:changed", (Timeline T) -> todosList.setListData(this.model().timelines()));
   }
 
   public JPanel render() {
     JPanel viewPanel = new JPanel(new BorderLayout());
     viewPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-    JList<Timeline> todosList = new JList<Timeline>(this.model().timelines());
-
     this.controller().create(new Timeline("Layer 1"));
-    this.controller().create(new Timeline("Layer 2"));
-    this.controller().create(new Timeline("Layer 3"));
 
-    this.on("menu:new", (file) -> file.)
     JScrollPane todosPane = new JScrollPane(todosList);
     viewPanel.add(todosPane, BorderLayout.CENTER);
 

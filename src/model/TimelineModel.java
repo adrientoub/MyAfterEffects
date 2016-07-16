@@ -7,6 +7,7 @@ import framework.Application;
 import framework.Model;
 import framework.Timeline;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
@@ -17,6 +18,7 @@ public final class TimelineModel extends Model {
 
   public TimelineModel(final Application application) {
     super(application);
+    this.on("menu:new", (File f) -> add(new Timeline(f.getName())));
   }
 
   public Timeline[] timelines() {

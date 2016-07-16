@@ -13,7 +13,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
 
 // Framework
 import controller.MenuController;
@@ -25,6 +24,9 @@ public final class MenuView extends View<MenuModel, MenuController> {
 
   public MenuView(final Application application) {
     super(application);
+
+    this.model(new MenuModel(application));
+    this.controller(new MenuController(application));
   }
   private JMenuItem createItem(String name) {
     JMenuItem jMenuItem = new JMenuItem(name);

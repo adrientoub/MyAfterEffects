@@ -29,11 +29,6 @@ public abstract class Model {
   private Application application;
 
   /**
-   * The internal {@link Radio} instance used for handling {@link Model} events.
-   */
-  private Radio radio = new Radio();
-
-  /**
    * Initialize a new {@link Model} instance for the specified
    * {@link Application}.
    *
@@ -67,7 +62,7 @@ public abstract class Model {
    *              by a {@link Consumer}.
    */
   protected final boolean emit(final String event) {
-    return this.radio.emit(event);
+    return this.application().radio().emit(event);
   }
 
   /**
@@ -84,7 +79,7 @@ public abstract class Model {
     final String event,
     final T data
   ) {
-    return this.radio.emit(event, data);
+    return this.application().radio().emit(event, data);
   }
 
   /**
@@ -102,7 +97,7 @@ public abstract class Model {
     final String event,
     final Consumer<T> consumer
   ) {
-    return this.radio.on(event, consumer);
+    return this.application().radio().on(event, consumer);
   }
 
   /**
@@ -120,6 +115,6 @@ public abstract class Model {
     final String event,
     final Consumer<T> consumer
   ) {
-    return this.radio.off(event, consumer);
+    return this.application().radio().off(event, consumer);
   }
 }

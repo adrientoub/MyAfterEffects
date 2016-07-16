@@ -9,13 +9,14 @@ import framework.Timeline;
 import model.TimelineModel;
 import view.TimelineView;
 
+import java.io.File;
+
 public final class TimelineController extends Controller<TimelineModel, TimelineView> {
 
   public TimelineController(final Application application) {
     super(application);
 
     this.on("timeline:clear", (data) -> this.clear());
-    this.on("menu:new", (File f) -> this.clear());
   }
 
   public void create(final Timeline timeline) throws NullPointerException {

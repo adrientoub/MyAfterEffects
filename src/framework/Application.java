@@ -28,7 +28,6 @@ public abstract class Application {
 
     // Pack the application frame.
     frame.pack();
-
     // Make the application frame visible.
     frame.setVisible(true);
   }

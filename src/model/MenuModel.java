@@ -27,8 +27,9 @@ public final class MenuModel extends Model {
     File selected = jFileChooser.getSelectedFile();
     if (selected == null)
       throw new IllegalArgumentException("User didn't select any file.");
-    else
+    else {
       this.emit("menu:new", selected);
+    }
   }
 
   public void exit(int i) {
