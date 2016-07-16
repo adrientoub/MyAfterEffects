@@ -20,6 +20,8 @@ idea {
 }
 dependencies {
     compile group: 'org.boofcv', name: 'jcodec', version: '0.24.1'
+    compile files('jaretutil-0.32.jar')
+    compile files('timebars-1.49.jar')
 }
 jar {
     manifest {

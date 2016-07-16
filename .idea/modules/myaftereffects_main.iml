@@ -28,5 +28,23 @@
     <orderEntry type="library" name="Gradle: org.ejml:dense64:0.29" level="project" />
     <orderEntry type="library" name="Gradle: org.ejml:core:0.29" level="project" />
     <orderEntry type="library" name="Gradle: org.ejml:equation:0.29" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../timebars-1.49.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../jaretutil-0.32.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
