@@ -2,13 +2,13 @@ package view;
 
 import controller.TabbedController;
 import framework.Application;
+import framework.ImagePanel;
 import framework.View;
 import model.TabbedModel;
 import org.jcodec.api.FrameGrab;
 import org.jcodec.api.JCodecException;
 import org.jcodec.common.model.ColorSpace;
 import org.jcodec.common.model.Picture;
-import org.jcodec.common.model.Picture8Bit;
 import org.jcodec.scale.ColorUtil;
 import org.jcodec.scale.Transform;
 

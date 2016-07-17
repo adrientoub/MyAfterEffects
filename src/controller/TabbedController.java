@@ -1,6 +1,4 @@
-/**
- * Copyright (C) 2015 Kasper Kronborg Isager.
- */
+
 package controller;
 
 import framework.Application;
