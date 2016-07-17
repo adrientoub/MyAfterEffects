@@ -32,43 +32,7 @@ public final class TabbedView extends View<TabbedModel, TabbedController> {
         this.on("menu:new", this::handle);
     }
 
-
-    public static BufferedImage toBufferedImage(Picture src) {
-        if (src.getColor() != ColorSpace.RGB) {
-            Transform transform = ColorUtil.getTransform(src.getColor(), ColorSpace.RGB);
-            Picture rgb = Picture.create(src.getWidth(), src.getHeight(), ColorSpace.RGB, src.getCrop());
-            transform.transform(src, rgb);
-            src = rgb;
-        }
-
-        BufferedImage dst = new BufferedImage(src.getCroppedWidth(), src.getCroppedHeight(),
-                BufferedImage.TYPE_3BYTE_BGR);
-
-        toBufferedImage(src, dst);
-
-        return dst;
-    }
-
-    public static void toBufferedImage(Picture src, BufferedImage dst) {
-        byte[] data = ((DataBufferByte) dst.getRaster().getDataBuffer()).getData();
-        int[] srcData = src.getPlaneData(0);
-        for (int i = 0; i < data.length; i++) {
-            data[i] = (byte) srcData[i];
-        }
-    }
-
     private void handle(File f) {
-        int frameNumber = 150;
-        try {
-            Picture picture = FrameGrab.getNativeFrame(f, frameNumber);
-            BufferedImage bufferedImage = toBufferedImage(picture);
-            tab.addTab("Video", new ImagePanel(bufferedImage));
-            tab.repaint();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JCodecException e) {
-            e.printStackTrace();
-        }
     }
 
     public JPanel render() {
