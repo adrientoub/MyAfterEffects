@@ -3,7 +3,6 @@ package controller;
 
 import framework.Application;
 import framework.Controller;
-import framework.Timeline;
 import model.TimelineModel;
 import view.TimelineView;
 

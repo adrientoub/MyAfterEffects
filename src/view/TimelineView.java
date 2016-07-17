@@ -14,9 +14,8 @@ import de.jaret.util.ui.timebars.swing.TimeBarViewer;
 import de.jaret.util.ui.timebars.swing.renderer.DefaultHierarchyRenderer;
 import de.jaret.util.ui.timebars.swing.renderer.DefaultTitleRenderer;
 import framework.Application;
-import framework.Timeline;
+import manager.Timeline;
 import framework.View;
-import manager.Video;
 import model.TimelineModel;
 import timeline.model.*;
 import timeline.swing.*;
@@ -33,7 +32,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -55,7 +53,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     this.controller(new TimelineController(application));
 
     todosList = new JList<>(this.model().timelines());
-    this.on("video:new", (Video v) -> addRow(v.getName()));
+    this.on("timeline:new", (Timeline t) -> addRow(t.getVideo().getName()));
   }
 
   public void addRow(String name) {

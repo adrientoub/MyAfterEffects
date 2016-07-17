@@ -3,9 +3,9 @@ package model;
 
 import framework.Application;
 import framework.Model;
-import framework.Timeline;
+import manager.Timeline;
+import manager.Video;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
@@ -16,20 +16,21 @@ public final class TimelineModel extends Model {
 
   public TimelineModel(final Application application) {
     super(application);
-    this.on("menu:new", (File f) -> add(new Timeline(f.getName())));
+    this.on("video:new", (Video v) -> add(v));
   }
 
   public Timeline[] timelines() {
     return this.timelines.toArray(new Timeline[this.timelines.size()]);
   }
 
-  public void add(final Timeline timeline) {
-    if (timeline == null) {
+  public void add(Video v) {
+    this.emit("timeline:new", new Timeline(v));
+    /*if (timeline == null) {
       throw new NullPointerException();
     }
 
     this.timelines.add(timeline);
-    this.emit("timelines:changed", timeline);
+    this.emit("timelines:changed", timeline);*/
   }
 
   public void remove(final Timeline timeline) {
