@@ -43,24 +43,8 @@ public final class MenuView extends View<MenuModel, MenuController> {
   }
 
   public JMenuBar render() {
-
     JMenuBar menuBar = new JMenuBar();
     addFileMenu(menuBar);
-
-    /*JMenu fileMenu = new JMenu("File");
-    menuBar.add(fileMenu);
-
-    JMenuItem clearTodos = new JMenuItem("Clear Todos");
-    fileMenu.add(clearTodos);
-
-
-    clearTodos.setAccelerator(KeyStroke.getKeyStroke(
-      KeyEvent.VK_BACK_SPACE,
-      Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()
-    ));
-
-    clearTodos.addActionListener(e -> this.emit("todos:clear"));*/
-
     return menuBar;
   }
 }

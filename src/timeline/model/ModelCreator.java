@@ -125,38 +125,13 @@ public class ModelCreator {
         row.addInterval(interval);
         
         model.addRow(row);
-        // kat3
-        row = new EventTimeBarRow(new DefaultRowHeader("Cat3"));
 
-        for (int i = 0; i < 20; i++) {
-            interval = new EventInterval(start.copy().advanceHours(i * 3), start.copy().advanceHours(i * 3 + 1));
-            interval.setTitle("short3." + i);
-            row.addInterval(interval);
-        }
-
-        model.addRow(row);
-        // kat4
-        row = new EventTimeBarRow(new DefaultRowHeader("Cat4"));
-
-        for (int i = 0; i < 20; i++) {
-            interval = new EventInterval(start.copy().advanceHours(i * 3), start.copy().advanceHours(i * 3 + Math.random()*5.0));
-            interval.setTitle("short4." + i);
-            row.addInterval(interval);
-        }
-
-        model.addRow(row);
         // kat5
         row = new EventTimeBarRow(new DefaultRowHeader("Cat5"));
 
         for (int i = 0; i < 20; i++) {
-            interval = new EventInterval(start.copy().advanceHours(i * 3), start.copy().advanceHours(i * 3 + 2));
+            interval = new EventInterval(start.copy().advanceHours(i * 3), start.copy().advanceHours(i * 3 + 3));
             interval.setTitle("short5.1." + i);
-            row.addInterval(interval);
-            interval = new EventInterval(start.copy().advanceHours(i * 3+1), start.copy().advanceHours(i * 3 + 3));
-            interval.setTitle("short5.2." + i);
-            row.addInterval(interval);
-            interval = new EventInterval(start.copy().advanceHours(i * 3+2), start.copy().advanceHours(i * 3 + 4));
-            interval.setTitle("short5.3." + i);
             row.addInterval(interval);
         }
 

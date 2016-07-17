@@ -42,11 +42,7 @@ public class EventMonitoringControlPanel extends JPanel {
     TimeBarViewer _viewer;
     JSlider _timeScaleSlider;
     JSlider _rowHeigthSlider;
-    JComboBox _sorterCombo;
-    JComboBox _filterCombo;
-    JComboBox _intervalFilterCombo;
     TimeBarMarkerImpl _marker;
-    JButton _freisetzenButton;
 
     public EventMonitoringControlPanel(TimeBarViewer viewer, TimeBarMarkerImpl marker, int initalSecondsDisplayed) {
         _viewer = viewer;
@@ -63,6 +59,7 @@ public class EventMonitoringControlPanel extends JPanel {
         final double min = 1; // minimum value for seconds displayed
         final double max = 3 * 365 * 24 * 60 * 60; // max nummber of seconds displayed (3 years in seconds)
         final double slidermax = 1000; // slider maximum (does not really matter)
+
         _timeScaleSlider = new JSlider(0, (int) slidermax);
 
         _timeScaleSlider.setPreferredSize(new Dimension(_timeScaleSlider.getPreferredSize().width * 4, _timeScaleSlider
@@ -76,8 +73,6 @@ public class EventMonitoringControlPanel extends JPanel {
         int initialSliderVal = calcInitialSliderVal(c, b, faktor, initialSeconds);
         _timeScaleSlider.setValue((int) (slidermax- initialSliderVal));
 
-        final JCheckBox centeredZoomCheck = new JCheckBox("Zoom around center (when no marker is not visible");
-        add(centeredZoomCheck);
 
         _timeScaleSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -85,8 +80,6 @@ public class EventMonitoringControlPanel extends JPanel {
                 double seconds = c + faktor * Math.pow(2, x * b); // calculate the seconds to display
                 if (_viewer.isDisplayed(_marker.getDate())) {
                     _viewer.setSecondsDisplayed((int) seconds, _marker.getDate());
-                } else {
-                    _viewer.setSecondsDisplayed((int) seconds, centeredZoomCheck.isSelected());
                 }
             }
         });
@@ -100,15 +93,6 @@ public class EventMonitoringControlPanel extends JPanel {
         });
         add(_rowHeigthSlider);
 
-        final JCheckBox optScrollingCheck = new JCheckBox("Optimize scrolling");
-        optScrollingCheck.setSelected(_viewer.getOptimizeScrolling());
-        optScrollingCheck.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                _viewer.setOptimizeScrolling(optScrollingCheck.isSelected());
-            }
-        });
-        add(optScrollingCheck);
-
         final JCheckBox markerInDiagramAreaCheck = new JCheckBox("Allow Marker drag in DiagramArea");
         markerInDiagramAreaCheck.setSelected(_viewer.getMarkerDraggingInDiagramArea());
         markerInDiagramAreaCheck.addActionListener(new ActionListener() {
@@ -118,41 +102,13 @@ public class EventMonitoringControlPanel extends JPanel {
         });
         add(markerInDiagramAreaCheck);
 
-        final JCheckBox boxTSRCheck = new JCheckBox("BoxTimeScaleRenderer");
-        boxTSRCheck.setSelected(_viewer.getTimeScaleRenderer() instanceof BoxTimeScaleRenderer);
-        boxTSRCheck.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (boxTSRCheck.isSelected()) {
-                    BoxTimeScaleRenderer btscr = new BoxTimeScaleRenderer();
-                    _viewer.setTimeScaleRenderer(btscr);
-                    if (_viewer.getGridRenderer() instanceof DefaultGridRenderer) {
-                        ((DefaultGridRenderer) _viewer.getGridRenderer()).setTickProvider(btscr);
-                    }
-                } else {
-                    DefaultTimeScaleRenderer dtscr = new DefaultTimeScaleRenderer();
-                    _viewer.setTimeScaleRenderer(dtscr);
-                }
-            }
-        });
-        add(boxTSRCheck);
+        BoxTimeScaleRenderer btscr = new BoxTimeScaleRenderer();
+        _viewer.setTimeScaleRenderer(btscr);
+        if (_viewer.getGridRenderer() instanceof DefaultGridRenderer) {
+            ((DefaultGridRenderer) _viewer.getGridRenderer()).setTickProvider(btscr);
+        }
 
-        final JCheckBox regionCheck = new JCheckBox("Enable region select");
-        regionCheck.setSelected(_viewer.getRegionRectEnable());
-        regionCheck.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                _viewer.setRegionRectEnable(regionCheck.isSelected());
-            }
-        });
-        add(regionCheck);
-
-        final JCheckBox uniformHeightCheck = new JCheckBox("Use uniform height");
-        uniformHeightCheck.setSelected(_viewer.getUseUniformHeight());
-        uniformHeightCheck.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                _viewer.setUseUniformHeight(uniformHeightCheck.isSelected());
-            }
-        });
-        add(uniformHeightCheck);
+        _viewer.getRegionRectEnable();
     }
 
     private int calcInitialSliderVal(double c, double b, double faktor, int seconds) {

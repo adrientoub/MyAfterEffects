@@ -16,6 +16,7 @@ import de.jaret.util.ui.timebars.swing.renderer.DefaultTitleRenderer;
 import framework.Application;
 import framework.Timeline;
 import framework.View;
+import manager.Video;
 import model.TimelineModel;
 import timeline.model.*;
 import timeline.swing.*;
@@ -32,6 +33,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -41,6 +43,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
   TimeBarViewer _tbv;
   TimeBarMarkerImpl _tm;
+  TimeBarModel flatModel;
 
   private JList<Timeline> todosList;
   private static final List _headerList = new ArrayList();
@@ -52,29 +55,31 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     this.controller(new TimelineController(application));
 
     todosList = new JList<>(this.model().timelines());
-    this.on("timelines:changed", (Timeline T) -> todosList.setListData(this.model().timelines()));
+    this.on("video:new", (Video v) -> addRow(v.getName()));
+  }
+
+  public void addRow(String name) {
+    JaretDate start = new JaretDate();
+    start.setDateTime(1, 1, 2009, 0, 0, 0);
+    JaretDate end = new JaretDate();
+    end.setDateTime(1, 2, 2009, 0, 0, 0);
+    DefaultRowHeader header = new DefaultRowHeader(name);
+    EventTimeBarRow row = new EventTimeBarRow(header);
+
+    // kat1
+    EventInterval interval = new EventInterval(start.copy(), end.copy());
+    interval.setTitle(name);
+    row.addInterval(interval);
+
+    ((DefaultTimeBarModel)flatModel).addRow(row);
   }
 
   public JPanel render() {
-    /*JPanel panel = new JPanel(new BorderLayout());
-
-    TimeBarModel model = createRandomModel(1, 5);
-    TimeBarViewer tbv = new TimeBarViewer(model);
-
-    panel.add(tbv, BorderLayout.CENTER);
-
-    // model will be changed by the main thread
-    //startChanging(model);
-    return panel;*/
-    return run();
-  }
-
-  public JPanel run() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setSize(1400, 600);
 
     HierarchicalTimeBarModel hierarchicalModel = ModelCreator.createHierarchicalModel();
-    TimeBarModel flatModel = ModelCreator.createFlatModel();
+    flatModel = ModelCreator.createFlatModel();
 
     _tbv = new TimeBarViewer();
 
@@ -105,7 +110,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
 
     // set a name for the viewer and setup the default title renderer
-    _tbv.setName("Monitor");
+    _tbv.setName("MyAfterEffects");
     _tbv.setTitleRenderer(new DefaultTitleRenderer());
 
 
@@ -388,6 +393,20 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     // go!
     panel.setVisible(true);
     return panel;
+  }
+
+  public void setEndDate(TimeBarViewer tbv, JaretDate endDate) {
+    int secondsDisplayed = tbv.getSecondsDisplayed();
+    JaretDate startDate = endDate.copy().advanceSeconds(-secondsDisplayed);
+    tbv.setStartDate(startDate);
+  }
+
+
+  boolean isInRange(JaretDate date, double min, double max) {
+    int secondsDisplayed = _tbv.getSecondsDisplayed();
+    JaretDate minDate = _tbv.getStartDate().copy().advanceSeconds(min*secondsDisplayed);
+    JaretDate maxDate = _tbv.getStartDate().copy().advanceSeconds(max*secondsDisplayed);
+    return minDate.compareTo(date)>0 && maxDate.compareTo(date)<0;
   }
 
   /**
