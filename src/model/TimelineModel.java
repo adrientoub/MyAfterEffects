@@ -6,6 +6,7 @@ import framework.Model;
 import manager.Timeline;
 import manager.Video;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
@@ -23,14 +24,14 @@ public final class TimelineModel extends Model {
     return this.timelines.toArray(new Timeline[this.timelines.size()]);
   }
 
-  public void add(Video v) {
-    this.emit("timeline:new", new Timeline(v));
-    /*if (timeline == null) {
-      throw new NullPointerException();
-    }
+  public static ArrayList<Video> GetVideosAtFrame(int frame_nb) {
+    return null;
+  }
 
-    this.timelines.add(timeline);
-    this.emit("timelines:changed", timeline);*/
+  public void add(Video v) {
+    Timeline t = new Timeline(v);
+    timelines.add(t);
+    this.emit("timeline:new", t);
   }
 
   public void remove(final Timeline timeline) {
