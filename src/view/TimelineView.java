@@ -8,6 +8,7 @@ import de.jaret.util.date.JaretDate;
 import de.jaret.util.ui.timebars.TimeBarMarker;
 import de.jaret.util.ui.timebars.TimeBarMarkerImpl;
 import de.jaret.util.ui.timebars.TimeBarViewerDelegate;
+import de.jaret.util.ui.timebars.mod.DefaultIntervalModificator;
 import de.jaret.util.ui.timebars.model.*;
 import de.jaret.util.ui.timebars.strategy.IIntervalSelectionStrategy;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
@@ -25,6 +26,8 @@ import timeline.swing.renderer.EventRenderer;
 
 import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.dnd.*;
@@ -43,16 +46,12 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
   TimeBarMarkerImpl _tm;
   TimeBarModel flatModel;
 
-  private JList<Timeline> todosList;
-  private static final List _headerList = new ArrayList();
-
   public TimelineView(final Application application) {
     super(application);
 
     this.model(new TimelineModel(application));
     this.controller(new TimelineController(application));
 
-    todosList = new JList<>(this.model().timelines());
     this.on("timeline:new", (Timeline t) -> addRow(t.getVideo().getName()));
   }
 
@@ -81,15 +80,8 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
     _tbv = new TimeBarViewer();
 
-
-    if (HIERARCHICAL) {
-      _tbv.setModel(hierarchicalModel);
-      _tbv.setHierarchyRenderer(new DefaultHierarchyRenderer());
-      _tbv.setHierarchyWidth(100);
-    } else {
-      _tbv.setModel(flatModel);
-      _tbv.setHierarchyWidth(0);
-    }
+    _tbv.setModel(flatModel);
+    _tbv.setHierarchyWidth(0);
     _tbv.setTimeScalePosition(TimeBarViewer.TIMESCALE_POSITION_TOP);
     _tbv.setYAxisWidth(100);
     panel.add(_tbv, BorderLayout.CENTER);
@@ -117,7 +109,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       public Interval selectInterval(List<Interval> intervals) {
         Interval result = null;
         for (Interval interval : intervals) {
-          if (result == null || interval.getSeconds()<result.getSeconds()) {
+          if (result == null || interval.getSeconds() < result.getSeconds()) {
             result = interval;
           }
         }
@@ -125,30 +117,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       }
     });
 
-
-    if (HIERARCHICAL) {
-      // set the overlap drawing property for the nodes on the second level
-      for (TimeBarNode node : hierarchicalModel.getRootNode().getChildren()) {
-        _tbv.getTimeBarViewState().setDrawOverlapping(node, true);
-      }
-
-      // add a listener that toggles the collect childIntervals property of expanded/collapsed nodes
-      _tbv.getHierarchicalViewState().addHierarchicalViewstateListener(new HierarchicalViewStateListener() {
-        public void nodeExpanded(TimeBarNode node) {
-          if (node instanceof CollectingTimeBarNode) {
-            CollectingTimeBarNode ctbn = (CollectingTimeBarNode) node;
-            ctbn.setCollectChildIntervals(false);
-          }
-        }
-
-        public void nodeFolded(TimeBarNode node) {
-          if (node instanceof CollectingTimeBarNode) {
-            CollectingTimeBarNode ctbn = (CollectingTimeBarNode) node;
-            ctbn.setCollectChildIntervals(true);
-          }
-        }
-      });
-    } else {
       // in general draw overlapping
       _tbv.setDrawOverlapping(true);
 
@@ -201,9 +169,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
       });
 
-
-    }
-
     // change listener
     _tbv.addTimeBarChangeListener(new ITimeBarChangeListener() {
 
@@ -234,20 +199,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
     });
 
-
-
-// sample property listener
-//        _tbv.addPropertyChangeListener(_tbv.PROPERTYNAME_STARTDATE, new PropertyChangeListener(){
-//
-//            @Override
-//            public void propertyChange(PropertyChangeEvent evt) {
-//                System.out.println("Start changed to "+evt.getNewValue());
-//            }
-//
-//        });
-
-    // Do not allow any modifications - do not add an interval modificator!
-    // _tbv.addIntervalModificator(new DefaultIntervalModificator());
 
     // do not allow row selections
     _tbv.getSelectionModel().setRowSelectionAllowed(false);
@@ -283,38 +234,10 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     pop.add(bodyaction);
     pop.add(new RunMarkerAction(_tbv));
 
-    // add the zoom action
-    pop.add(new ZoomAction(_tbv));
     // add the rem selection action
     pop.add(new ResetRegionSelectionAction(_tbv));
 
     _tbv.setBodyContextMenu(pop);
-
-    // sample: check enablement of action in a popup
-//        pop.addPopupMenuListener(new PopupMenuListener() {
-//
-//            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-//                System.out.println(_tbv.getPopUpInformation().getLeft());
-//                System.out.println(_tbv.getPopUpInformation().getRight().toDisplayString());
-//                if (_tbv.getPopUpInformation().getRight().getHours()>9) {
-//                    bodyaction.setEnabled(false);
-//                } else {
-//                    bodyaction.setEnabled(true);
-//                }
-//            }
-//
-//            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//
-//            public void popupMenuCanceled(PopupMenuEvent e) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//        });
-
-
 
     // add a popup menu for the hierarchy
     action = new AbstractAction("HierarchyAction") {
@@ -366,30 +289,15 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     EventMonitoringControlPanel cp = new EventMonitoringControlPanel(_tbv, _tm, 100); // TODO
     panel.add(cp, BorderLayout.SOUTH);
 
-
-
-    // make sure the marker is in a certain area when zooming
-    // relative display range the marker should be in after zooming
-    final double min = 0.3;
-    final double max = 0.7;
-
-//      _tbv.addPropertyChangeListener(_tbv.PROPERTYNAME_PIXELPERSECOND, new PropertyChangeListener(){
-//                    public void propertyChange(PropertyChangeEvent evt) {
-//                        // if not displayed set the viewer to display the marker at the min position
-//                        if (!isInRange(_tm.getDate(), min, max)) {
-//                            int secondsDisplayed = _tbv.getSecondsDisplayed();
-//                            JaretDate startDate = _tm.getDate().copy().advanceSeconds(-min*secondsDisplayed);
-//     //                       _tbv.setStartDate(startDate);
-//                        }
-//                    }
-//
-//                });
-
-
-
-
     // go!
     panel.setVisible(true);
+    new Thread() {
+      @Override
+      public void run() {
+        startChanging(flatModel);
+      }
+    }.start();
+
     return panel;
   }
 
@@ -407,58 +315,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     return minDate.compareTo(date)>0 && maxDate.compareTo(date)<0;
   }
 
-  /**
-   * Simple zoom action.
-   * @author kliem
-   * @version $Id: EventMonitoringExample.java 1073 2010-11-22 21:25:33Z kliem $
-   */
-  class ZoomAction extends AbstractAction implements ISelectionRectListener {
-    TimeBarViewer _tbv;
-    public ZoomAction(TimeBarViewer tbv) {
-      super("Zoom to selection");
-      _tbv = tbv;
-      setEnabled(false);
-      _tbv.addSelectionRectListener(this);
-    }
-
-
-    public void actionPerformed(ActionEvent e) {
-      if (_tbv.getRegionRect() != null) {
-        TBRect tbrect = _tbv.getRegionRect();
-        JaretDate startDate = tbrect.startDate;
-        int seconds = tbrect.endDate.diffSeconds(tbrect.startDate);
-        int pixel = _tbv.getDelegate().getDiagramRect().width;
-        double pps = ((double) pixel) /((double)seconds);
-        _tbv.clearRegionRect();
-        _tbv.setPixelPerSecond(pps);
-        _tbv.setStartDate(startDate);
-        // TODO row scaling
-      }
-    }
-
-
-    public void regionRectChanged(TimeBarViewerDelegate delegate, TBRect tbrect) {
-      setEnabled(true);
-    }
-
-
-    public void regionRectClosed(TimeBarViewerDelegate delegate) {
-      setEnabled(false);
-    }
-
-
-    public void selectionRectChanged(TimeBarViewerDelegate delegate, JaretDate beginDate, JaretDate endDate,
-                                     List<TimeBarRow> rows) {
-      // TODO Auto-generated method stub
-
-    }
-
-    public void selectionRectClosed(TimeBarViewerDelegate delegate) {
-      // TODO Auto-generated method stub
-
-    }
-
-  }
   class ResetRegionSelectionAction extends AbstractAction {
     TimeBarViewer _tbv;
     public ResetRegionSelectionAction(TimeBarViewer tbv) {
@@ -526,46 +382,8 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     }
   }
 
-  private static TimeBarModel createRandomModel(int rows, int countPerRow) {
-    DefaultTimeBarModel model = new DefaultTimeBarModel();
-
-    for (int row = 0; row < rows; row++) {
-      DefaultRowHeader header = new DefaultRowHeader("Layer" + row);
-      _headerList.add(header);
-      DefaultTimeBarRowModel tbr = new DefaultTimeBarRowModel(header);
-      JaretDate date = new JaretDate();
-      for (int i = 0; i < countPerRow; i++) {
-        IntervalImpl interval = new IntervalImpl();
-        int videoLength = 5;
-        interval.setBegin(date.copy());
-        date.advanceMinutes(videoLength);
-        interval.setEnd(date.copy());
-
-        tbr.addInterval(interval);
-
-        int pause = 20;
-        date.advanceMinutes(pause);
-      }
-      model.addRow(tbr);
-    }
-
-    return model;
-  }
-
   private static void startChanging(TimeBarModel model) {
-    long delay = 800;
-    for (int r = 0; r < model.getRowCount(); r++) {
-      TimeBarRow row = model.getRow(r);
-      double sum = getIntervalSum(row);
-      DefaultRowHeader header = (DefaultRowHeader) _headerList.get(r);
-      header.setLabel("R" + r + "(" + sum + ")");
-      System.out.println("Changed header " + r);
-      try {
-        Thread.sleep(delay);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
+    long delay = 3000;
     for (int r = 0; r < model.getRowCount(); r++) {
       TimeBarRow row = model.getRow(r);
       Iterator it = row.getIntervals().iterator();
@@ -575,9 +393,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         JaretDate date = interval.getEnd().copy();
         date.backMinutes(minutes / 4);
         interval.setEnd(date);
-        double sum = getIntervalSum(row);
-        DefaultRowHeader header = (DefaultRowHeader) _headerList.get(r);
-        header.setLabel("R" + r + "(" + sum + ")");
         System.out.println("Changed interval " + interval);
         try {
           Thread.sleep(delay / 2);

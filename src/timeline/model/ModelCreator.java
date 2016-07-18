@@ -32,61 +32,6 @@ import java.util.Random;
  */
 public class ModelCreator {
 
-    static Random _random = new Random(12345);
-
-    public static HierarchicalTimeBarModel createHierarchicalModel() {
-
-        JaretDate start = new JaretDate();
-        start.setDateTime(1, 1, 2009, 0, 0, 0);
-        JaretDate end = new JaretDate();
-        end.setDateTime(1, 2, 2009, 0, 0, 0);
-
-        DefaultRowHeader header = new DefaultRowHeader("root");
-        TimeBarNode node;
-        node = new AddingTimeBarNode(header);
-
-        CollectingTimeBarNode kat1 = new CollectingTimeBarNode(new DefaultRowHeader("Cat1"));
-        node.addNode(kat1);
-        CollectingTimeBarNode kat2 = new CollectingTimeBarNode(new DefaultRowHeader("Cat2"));
-        node.addNode(kat2);
-        CollectingTimeBarNode kat3 = new CollectingTimeBarNode(new DefaultRowHeader("Cat3"));
-        node.addNode(kat3);
-        CollectingTimeBarNode kat4 = new CollectingTimeBarNode(new DefaultRowHeader("Cat4"));
-        node.addNode(kat4);
-
-        // kat1
-        EventInterval interval = new EventInterval(start.copy(), end.copy());
-        interval.setTitle("long running");
-        kat1.addInterval(interval);
-    
-        DefaultTimeBarNode n = new DefaultTimeBarNode(new DefaultRowHeader(""));
-        interval = new EventInterval(start.copy().advanceHours(10), start.copy().advanceHours(15));
-        interval.setTitle("short1");
-        n.addInterval(interval);
-        kat1.addNode(n);
-
-        // kat2
-        n = new DefaultTimeBarNode(new DefaultRowHeader(""));
-        interval = new EventInterval(start.copy().advanceHours(11), start.copy().advanceHours(14));
-        interval.setTitle("short2");
-        n.addInterval(interval);
-        kat2.addNode(n);
-
-        // kat3
-        n = new DefaultTimeBarNode(new DefaultRowHeader(""));
-        for (int i = 0; i < 20; i++) {
-            interval = new EventInterval(start.copy().advanceHours(i * 3), start.copy().advanceHours(i * 3 + 1));
-            interval.setTitle("short" + i);
-            n.addInterval(interval);
-        }
-        kat3.addNode(n);
-
-        HierarchicalTimeBarModel model = new DefaultHierarchicalTimeBarModel(node);
-
-        return model;
-
-    }
-
     public static TimeBarModel createFlatModel() {
 
         JaretDate start = new JaretDate();
