@@ -41,9 +41,11 @@ public class Video {
         System.out.println("Width: " + width);
         System.out.println("Height: " + height);
         System.out.println("FPS: " + fps);
-        nbFrames = 200;
+        double frameCount = videoCapture.get(CAP_PROP_FRAME_COUNT);
+        System.out.println(frameCount);
+        nbFrames = (int)frameCount;
         if (fps > 0)
-            duration = new Time((long) (nbFrames / fps));
+            duration = new Time((long) (frameCount / fps));
         else
             duration = new Time(nbFrames);
     }
