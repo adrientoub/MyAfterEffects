@@ -1,5 +1,6 @@
 package manager;
 
+import filters.Filter;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 
@@ -7,7 +8,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
+import java.nio.Buffer;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.opencv.videoio.Videoio.*;
 
@@ -15,7 +19,7 @@ import static org.opencv.videoio.Videoio.*;
  * Created by Damien on 17/07/2016.
  */
 public class Video {
-
+    private List<Filter> filters;
     private double fps;
     private int nbFrames;
     private Time duration;
@@ -33,17 +37,19 @@ public class Video {
     }
 
     public Video(File f) {
+        filters = new ArrayList<>();
         file = f;
         videoCapture = new VideoCapture(f.getAbsolutePath());
         double width = videoCapture.get(CAP_PROP_FRAME_WIDTH);
         double height = videoCapture.get(CAP_PROP_FRAME_HEIGHT);
         fps = videoCapture.get(CAP_PROP_FPS);
+        double frameCount = videoCapture.get(CAP_PROP_FRAME_COUNT);
+        nbFrames = (int)frameCount;
+
         System.out.println("Width: " + width);
         System.out.println("Height: " + height);
         System.out.println("FPS: " + fps);
-        double frameCount = videoCapture.get(CAP_PROP_FRAME_COUNT);
-        System.out.println(frameCount);
-        nbFrames = (int)frameCount;
+        System.out.println("Frame count: " + frameCount);
         if (fps > 0)
             duration = new Time((long) (frameCount / fps));
         else
@@ -57,9 +63,17 @@ public class Video {
         videoCapture.set(CAP_PROP_POS_FRAMES, frameNb);
 
         if (videoCapture.read(frame)) {
-            return Mat2bufferedImage(frame);
+            BufferedImage image = Mat2bufferedImage(frame);
+            for (Filter filter: filters) {
+                image = filter.applyFilter(image);
+            }
+            return image;
         }
         return null;
+    }
+
+    public void addFilter(Filter filter) {
+        filters.add(filter);
     }
 
     public double getFps() {

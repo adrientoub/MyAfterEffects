@@ -112,7 +112,6 @@ public class EventMonitoringControlPanel extends JPanel {
     }
 
     private int calcInitialSliderVal(double c, double b, double faktor, int seconds) {
-
         double x = 1 / b * log2((seconds - c) / faktor);
 
         return (int) x;
