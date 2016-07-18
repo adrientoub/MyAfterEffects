@@ -8,8 +8,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class ImagePanel extends JPanel {
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
     private BufferedImage image;
 
     /**
@@ -69,6 +69,9 @@ public class ImagePanel extends JPanel {
 
     public void setImage(BufferedImage image) {
         this.image = image;
+        width = image.getWidth();
+        height = image.getHeight();
+        setPreferredSize(new Dimension(width, height));
         this.repaint();
     }
 
