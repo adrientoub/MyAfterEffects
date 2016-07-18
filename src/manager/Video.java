@@ -1,89 +1,79 @@
 package manager;
 
-import org.jcodec.api.FrameGrab;
-import org.jcodec.api.JCodecException;
-import org.jcodec.common.model.ColorSpace;
-import org.jcodec.common.model.Picture;
-import org.jcodec.scale.ColorUtil;
-import org.jcodec.scale.Transform;
+import org.opencv.core.Mat;
+import org.opencv.videoio.VideoCapture;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
-import java.io.IOException;
 import java.sql.Time;
+
+import static org.opencv.videoio.Videoio.*;
 
 /**
  * Created by Damien on 17/07/2016.
  */
 public class Video {
 
-    private float _fps;
-    private int _nbframes;
+    private double fps;
+    private int nbFrames;
     private Time duration;
+    private VideoCapture videoCapture;
     private File file;
-    private BufferedImage image;
+
+    private static BufferedImage Mat2bufferedImage(Mat image) {
+        int bufferSize = image.channels() * image.cols() * image.rows();
+        byte [] bytes = new byte[bufferSize];
+        image.get(0, 0, bytes);
+        BufferedImage img = new BufferedImage(image.width(), image.height(), BufferedImage.TYPE_3BYTE_BGR);
+        final byte[] targetPixels = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
+        System.arraycopy(bytes, 0, targetPixels, 0, bytes.length);
+        return img;
+    }
 
     public Video(File f) {
-        this.file = f;
-        /* Open the file with jcodec */
-        try {
-            // TODO
-            int frameNumber = 150;
-            Picture picture = FrameGrab.getNativeFrame(f, frameNumber);
-            image = toBufferedImage(picture);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JCodecException e) {
-            e.printStackTrace();
+        file = f;
+        videoCapture = new VideoCapture(f.getAbsolutePath());
+        double width = videoCapture.get(CAP_PROP_FRAME_WIDTH);
+        double height = videoCapture.get(CAP_PROP_FRAME_HEIGHT);
+        fps = videoCapture.get(CAP_PROP_FPS);
+        System.out.println("Width: " + width);
+        System.out.println("Height: " + height);
+        System.out.println("FPS: " + fps);
+        nbFrames = 200;
+        if (fps > 0)
+            duration = new Time((long) (nbFrames / fps));
+        else
+            duration = new Time(nbFrames);
+    }
+
+    public BufferedImage getImage(int frameNb) {
+        ImageIO.setUseCache(false);
+        System.out.println("Getting image: " + frameNb);
+        Mat frame = new Mat();
+        videoCapture.set(CAP_PROP_POS_FRAMES, frameNb);
+
+        if (videoCapture.read(frame)) {
+            return Mat2bufferedImage(frame);
         }
-        duration = new Time(0, 2, 30);
-        // TODO
+        return null;
     }
 
-    private BufferedImage toBufferedImage(Picture src) {
-        if (src.getColor() != ColorSpace.RGB) {
-            Transform transform = ColorUtil.getTransform(src.getColor(), ColorSpace.RGB);
-            Picture rgb = Picture.create(src.getWidth(), src.getHeight(), ColorSpace.RGB, src.getCrop());
-            transform.transform(src, rgb);
-            src = rgb;
-        }
-
-        BufferedImage dst = new BufferedImage(src.getCroppedWidth(), src.getCroppedHeight(),
-                BufferedImage.TYPE_3BYTE_BGR);
-
-        toBufferedImage(src, dst);
-
-        return dst;
+    public double getFps() {
+        return fps;
     }
 
-    public void toBufferedImage(Picture src, BufferedImage dst) {
-        byte[] data = ((DataBufferByte) dst.getRaster().getDataBuffer()).getData();
-        int[] srcData = src.getPlaneData(0);
-        for (int i = 0; i < data.length; i++) {
-            data[i] = (byte) srcData[i];
-        }
+    public void setFps(double fps) {
+        this.fps = fps;
     }
 
-    public BufferedImage getImage(int frame) {
-        // TODO, for now only return 150th frame
-        return image;
+    public int getNbFrames() {
+        return nbFrames;
     }
 
-    public float get_fps() {
-        return _fps;
-    }
-
-    public void set_fps(float _fps) {
-        this._fps = _fps;
-    }
-
-    public int get_nbframes() {
-        return _nbframes;
-    }
-
-    public void set_nbframes(int _nbframes) {
-        this._nbframes = _nbframes;
+    public void setNbFrames(int nbFrames) {
+        this.nbFrames = nbFrames;
     }
 
     public Time getDuration() {

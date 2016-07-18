@@ -19,9 +19,10 @@ idea {
     }
 }
 dependencies {
-    compile group: 'org.boofcv', name: 'jcodec', version: '0.24.1'
-    compile files('jaretutil-0.32.jar')
-    compile files('timebars-1.49.jar')
+    compile files('lib/timebars/jaretutil-0.32.jar')
+    compile files('lib/timebars/timebars-1.49.jar')
+    compile files('lib/opencv/opencv-310.jar')
+    compile files('lib/ffmpeg/ffmpeg-windows-x86_64.jar')
 }
 jar {
     manifest {

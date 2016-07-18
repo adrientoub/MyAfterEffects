@@ -9,21 +9,10 @@ import framework.ImagePanel;
 import framework.View;
 import manager.Video;
 import model.PreviewModel;
-import org.jcodec.api.FrameGrab;
-import org.jcodec.api.JCodecException;
-import org.jcodec.common.model.ColorSpace;
-import org.jcodec.common.model.Picture;
-import org.jcodec.scale.ColorUtil;
-import org.jcodec.scale.Transform;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.io.File;
-import java.io.IOException;
 
 // AWT utilities
 // Swing utilities
@@ -52,7 +41,8 @@ public final class PreviewView extends View<PreviewModel, PreviewController> {
   }
 
   private void handle(Video v) {
-    imagePanel.setImage(v.getImage(0));
+    imagePanel.setImage(v.getImage(250));
+    imagePanel.repaint();
   }
 
   /**
