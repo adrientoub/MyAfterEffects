@@ -51,22 +51,29 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     start.setDateTime(1, 1, 2009, 0, 0, 0);
     JaretDate end = new JaretDate();
     end.setDateTime(1, 2, 2009, 0, 0, 0);
+
     DefaultRowHeader header = new DefaultRowHeader(name);
     EventTimeBarRow row = new EventTimeBarRow(header);
 
     // kat1
-    EventInterval interval = new EventInterval(start.copy(), end.copy());
-    interval.setTitle(name);
-    row.addInterval(interval);
+        EventInterval interval = new EventInterval(start.copy(), end.copy());
+
+            interval = new EventInterval(start.copy().advanceHours(0), start.copy().advanceHours(0 * 3 + 3));
+            interval.setTitle("short5.1.");
+            row.addInterval(interval);
 
     ((DefaultTimeBarModel)flatModel).addRow(row);
+    _tbv.setModel(flatModel);
+    _tbv.setHierarchyWidth(0);
+    _tbv.setTimeScalePosition(TimeBarViewer.TIMESCALE_POSITION_TOP);
+    _tbv.setYAxisWidth(100);
   }
 
   public JPanel render() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setSize(1400, 600);
 
-    flatModel = ModelCreator.createFlatModel();
+    flatModel = new DefaultTimeBarModel();
 
     _tbv = new TimeBarViewer();
 
@@ -275,7 +282,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     new Thread() {
       @Override
       public void run() {
-        startChanging(flatModel);
+        //startChanging(flatModel);
       }
     }.start();
 
