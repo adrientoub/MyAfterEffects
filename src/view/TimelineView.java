@@ -3,16 +3,13 @@ package view;
 
 import controller.TimelineController;
 import de.jaret.util.date.Interval;
-import de.jaret.util.date.IntervalImpl;
 import de.jaret.util.date.JaretDate;
 import de.jaret.util.ui.timebars.TimeBarMarker;
 import de.jaret.util.ui.timebars.TimeBarMarkerImpl;
 import de.jaret.util.ui.timebars.TimeBarViewerDelegate;
-import de.jaret.util.ui.timebars.mod.DefaultIntervalModificator;
 import de.jaret.util.ui.timebars.model.*;
 import de.jaret.util.ui.timebars.strategy.IIntervalSelectionStrategy;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
-import de.jaret.util.ui.timebars.swing.renderer.DefaultHierarchyRenderer;
 import de.jaret.util.ui.timebars.swing.renderer.DefaultTitleRenderer;
 import framework.Application;
 import manager.Timeline;
@@ -20,14 +17,10 @@ import framework.View;
 import model.TimelineModel;
 import timeline.model.*;
 import timeline.swing.*;
-
 import timeline.swing.renderer.EventMonitorHeaderRenderer;
 import timeline.swing.renderer.EventRenderer;
-
 import javax.swing.*;
 import javax.swing.Timer;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.dnd.*;
@@ -39,8 +32,6 @@ import java.util.*;
 import java.util.List;
 
 public final class TimelineView extends View<TimelineModel, TimelineController> {
-
-  private final static boolean HIERARCHICAL = false;
 
   TimeBarViewer _tbv;
   TimeBarMarkerImpl _tm;
@@ -55,7 +46,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     this.on("timeline:new", (Timeline t) -> addRow(t.getVideo().getName()));
   }
 
-  public void addRow(String name) {
+  private void addRow(String name) {
     JaretDate start = new JaretDate();
     start.setDateTime(1, 1, 2009, 0, 0, 0);
     JaretDate end = new JaretDate();
@@ -75,7 +66,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     JPanel panel = new JPanel(new BorderLayout());
     panel.setSize(1400, 600);
 
-    HierarchicalTimeBarModel hierarchicalModel = ModelCreator.createHierarchicalModel();
     flatModel = ModelCreator.createFlatModel();
 
     _tbv = new TimeBarViewer();
@@ -234,9 +224,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     pop.add(bodyaction);
     pop.add(new RunMarkerAction(_tbv));
 
-    // add the rem selection action
-    pop.add(new ResetRegionSelectionAction(_tbv));
-
     _tbv.setBodyContextMenu(pop);
 
     // add a popup menu for the hierarchy
@@ -279,12 +266,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     pop.add(action);
     _tbv.setTitleContextMenu(pop);
 
-    // add dnd support
-    DragSource dragSource = DragSource.getDefaultDragSource();
-    DragGestureListener dgl = new TimeBarViewerDragGestureListener();
-    DragGestureRecognizer dgr = dragSource.createDefaultDragGestureRecognizer(_tbv._diagram,
-            DnDConstants.ACTION_COPY, dgl);
-
     // add the control panel
     EventMonitoringControlPanel cp = new EventMonitoringControlPanel(_tbv, _tm, 100); // TODO
     panel.add(cp, BorderLayout.SOUTH);
@@ -315,17 +296,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     return minDate.compareTo(date)>0 && maxDate.compareTo(date)<0;
   }
 
-  class ResetRegionSelectionAction extends AbstractAction {
-    TimeBarViewer _tbv;
-    public ResetRegionSelectionAction(TimeBarViewer tbv) {
-      super("Remove selection");
-      _tbv = tbv;
-    }
-    public void actionPerformed(ActionEvent e) {
-      _tbv.clearRegionRect();
-    }
-
-  }
   class RunMarkerAction extends AbstractAction {
     TimeBarViewer _tbv;
     public RunMarkerAction(TimeBarViewer tbv) {
@@ -401,17 +371,5 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         }
       }
     }
-
-  }
-
-  private static double getIntervalSum(TimeBarRow row) {
-    double result = 0;
-    Iterator it = row.getIntervals().iterator();
-    while (it.hasNext()) {
-      Interval interval = (Interval) it.next();
-      result += interval.getEnd().diffMinutes(interval.getBegin());
-    }
-
-    return result;
   }
 }
