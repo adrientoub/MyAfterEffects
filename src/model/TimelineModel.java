@@ -1,4 +1,3 @@
-
 package model;
 
 import de.jaret.util.date.Interval;
@@ -13,10 +12,11 @@ import framework.Application;
 import framework.Model;
 import manager.Media;
 import manager.Timeline;
-import manager.Video;
-import timeline.model.EventInterval;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
 // Framework

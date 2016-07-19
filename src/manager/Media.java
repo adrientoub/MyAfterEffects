@@ -3,7 +3,6 @@ package manager;
 import filters.Filter;
 
 import java.awt.image.BufferedImage;
-import java.sql.Time;
 
 /**
  * Created by Adrien on 19/07/2016.

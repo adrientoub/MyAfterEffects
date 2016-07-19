@@ -1,17 +1,13 @@
 package manager;
 
-import de.jaret.util.date.Interval;
 import filters.Filter;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
-import timeline.model.EventInterval;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 

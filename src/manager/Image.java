@@ -1,14 +1,11 @@
 package manager;
 
-import de.jaret.util.date.JaretDate;
 import filters.Filter;
-import timeline.model.EventInterval;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +15,7 @@ import java.util.List;
 public class Image implements Media {
     private BufferedImage image;
     private List<Filter> filters;
-    private long duration = 5;
+    private long duration = 5000;
     private String name;
 
     public Image(File file) throws IOException {
