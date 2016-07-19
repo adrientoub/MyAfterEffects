@@ -43,14 +43,12 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     this.model(new TimelineModel(application));
     this.controller(new TimelineController(application));
 
-    this.on("timeline:new", (Timeline t) -> addRow(t.getVideo().getName()));
+    this.on("timeline:new", (Timeline t) -> addRow(t.getMedia().getName()));
   }
 
   private void addRow(String name) {
     JaretDate start = new JaretDate();
-    start.setDateTime(1, 1, 2009, 0, 0, 0);
-    JaretDate end = new JaretDate();
-    end.setDateTime(1, 2, 2009, 0, 0, 0);
+    start.setDateTime(0, 0, 0, 0, 0, 0);
 
     DefaultRowHeader header = new DefaultRowHeader(name);
     EventTimeBarRow row = new EventTimeBarRow(header);
@@ -127,6 +125,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
             if (_tbv.getDelegate().getYAxisRect().contains(origin)) {
               TimeBarRow row = _tbv.getRowForXY(origin.x, origin.y);
               if (row != null) {
+                  System.out.println("Index in " + (origin.y / _tbv.getRowHeight() - 1));
                 if (row instanceof EventTimeBarRow) {
                   EventTimeBarRow erow = (EventTimeBarRow) row;
                   if (!erow.isExpanded()) {
@@ -284,6 +283,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       }
     }.start();
 
+      this.model().setTbv(_tbv);
     return panel;
   }
 

@@ -1,10 +1,13 @@
 package manager;
 
+import de.jaret.util.date.Interval;
 import filters.Filter;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
+import timeline.model.EventInterval;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
@@ -24,6 +27,7 @@ public class Video implements Media {
     private Time duration;
     private VideoCapture videoCapture;
     private File file;
+    private ArrayList<EventInterval> intervals;
 
     private static BufferedImage Mat2bufferedImage(Mat image) {
         int bufferSize = image.channels() * image.cols() * image.rows();
@@ -53,11 +57,12 @@ public class Video implements Media {
             duration = new Time((long) (frameCount / fps));
         else
             duration = new Time(nbFrames);
+
+        setIntervals(null);
     }
 
     public BufferedImage getImage(int frameNb) {
         ImageIO.setUseCache(false);
-        System.out.println("Getting image: " + frameNb);
         Mat frame = new Mat();
         videoCapture.set(CAP_PROP_POS_FRAMES, frameNb);
 
@@ -103,5 +108,18 @@ public class Video implements Media {
 
     public String getName() {
         return file.getName();
+    }
+
+    /* A video can be split in several intervals */
+    public void setIntervals(ArrayList<EventInterval> intervals) {
+        /* No intervals, mean video is new in the software */
+        if (intervals == null)
+            this.intervals = new ArrayList<>();
+        else
+            this.intervals = intervals;
+    }
+
+    public ArrayList<EventInterval> getIntervals() {
+        return intervals;
     }
 }

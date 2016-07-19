@@ -21,6 +21,9 @@ package timeline.model;
 
 import de.jaret.util.date.IntervalImpl;
 import de.jaret.util.date.JaretDate;
+import filters.Filter;
+
+import java.util.ArrayList;
 
 /**
  * Simple interval extension that holds a titel string.
@@ -30,6 +33,7 @@ import de.jaret.util.date.JaretDate;
  */
 public class EventInterval extends IntervalImpl {
     private String _title;
+    private ArrayList<Filter> filters;
 
     public EventInterval(JaretDate from, JaretDate to) {
         super(from, to);
@@ -48,4 +52,13 @@ public class EventInterval extends IntervalImpl {
         return _title + ":" + super.toString();
     }
 
+    public ArrayList<Filter> getFilters() {
+        return filters;
+    }
+
+    public void addFilter(Filter filter) {
+        if (filter == null)
+            throw new NullPointerException("Tried to add null filter to an Interval");
+        this.filters.add(filter);
+    }
 }

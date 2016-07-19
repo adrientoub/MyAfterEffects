@@ -1,10 +1,16 @@
 
 package controller;
 
+import de.jaret.util.date.JaretDate;
 import framework.Application;
 import framework.Controller;
+import manager.Media;
 import model.MenuModel;
+import model.TimelineModel;
 import view.MenuView;
+import view.TimelineView;
+
+import java.util.ArrayList;
 
 public final class MenuController extends Controller<MenuModel, MenuView> {
 
@@ -23,6 +29,12 @@ public final class MenuController extends Controller<MenuModel, MenuView> {
         } catch (IllegalArgumentException e) {
           System.err.println(e.getMessage());
         }
+        break;
+      case "Render":
+        /* TODO Adrien */
+        ArrayList<Media> medias = TimelineModel.GetMediasAtFrame(TimelineModel.getMarkerTime());
+        for (Media m : medias)
+          System.out.println(m.getName());
         break;
     }
   }

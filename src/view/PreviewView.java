@@ -4,6 +4,7 @@ package view;
 // General utilities
 
 import controller.PreviewController;
+import de.jaret.util.date.JaretDate;
 import framework.Application;
 import framework.ImagePanel;
 import framework.View;
@@ -39,12 +40,20 @@ public final class PreviewView extends View<PreviewModel, PreviewController> {
     imagePanel = new ImagePanel(this.model().image());
 
     this.on("media:new", this::handle);
+    this.on("marker:changed", this::handleMarker);
+    //this.on("timeline:selection", this::handle);
   }
 
-  private void handle(Media m) {
-    imagePanel.setImage(m.getImage(0));
-    imagePanel.repaint();
-  }
+    private void handle(Media m) {
+        imagePanel.setImage(m.getImage(0));
+        imagePanel.repaint();
+    }
+
+    /* TODO */
+    private void handleMarker(JaretDate markerDate) {
+        /*imagePanel.setImage(m.getImage(0));
+        imagePanel.repaint();*/
+    }
 
   /**
    * Render the {@link PreviewView}.

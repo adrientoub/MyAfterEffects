@@ -1,6 +1,8 @@
 package manager;
 
+import de.jaret.util.date.JaretDate;
 import filters.Filter;
+import timeline.model.EventInterval;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -63,5 +65,18 @@ public class Image implements Media {
     @Override
     public String getName() {
         return null;
+    }
+
+    @Override
+    public ArrayList<EventInterval> getIntervals() {
+        /* An Image always got one interval */
+        Time t = getDuration();
+        ArrayList<EventInterval> list = new ArrayList<>();
+        list.add(new EventInterval(null, new JaretDate(0, 0, 0, t.getHours(), t.getMinutes(), t.getSeconds())));
+        return list;
+    }
+
+    @Override
+    public void setIntervals(ArrayList<EventInterval> intervals) {
     }
 }

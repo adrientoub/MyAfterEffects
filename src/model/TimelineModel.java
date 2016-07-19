@@ -7,40 +7,56 @@ import de.jaret.util.ui.timebars.TimeBarMarker;
 import de.jaret.util.ui.timebars.TimeBarMarkerImpl;
 import de.jaret.util.ui.timebars.model.TimeBarModel;
 import de.jaret.util.ui.timebars.model.TimeBarRow;
+import de.jaret.util.ui.timebars.swing.TimeBarViewer;
 import framework.Application;
 import framework.Model;
+import manager.Media;
 import manager.Timeline;
 import manager.Video;
+import timeline.model.EventInterval;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.function.Consumer;
 
 // Framework
 
 public final class TimelineModel extends Model {
-  private Collection<Timeline> timelines = new LinkedHashSet<>();
+  private static Collection<Timeline> timelines = new LinkedHashSet<>();
   private static TimeBarMarker marker = new TimeBarMarkerImpl(true, null);
+  static TimeBarViewer _tbv;
 
   public TimelineModel(final Application application) {
     super(application);
     this.on("media:new", this::add);
   }
 
-  public Timeline[] timelines() {
-    return this.timelines.toArray(new Timeline[this.timelines.size()]);
+  public static Timeline[] timelines() {
+    return timelines.toArray(new Timeline[timelines.size()]);
   }
 
-  public static ArrayList<Video> GetVideosAtFrame(JaretDate date) {
-    ArrayList<Video> list = new ArrayList<>();
-    forEachInterval(null, new Consumer<Interval>() {
-      @Override
-      public void accept(Interval interval) {
-        // TODO
+  public static ArrayList<Media> GetMediasAtFrame(JaretDate date) {
+    ArrayList<Media> list = new ArrayList<>();
+    TimeBarModel model = getTbv().getModel();
+
+    for (int r = 0; r < model.getRowCount(); r++) {
+      System.out.println("in row");
+      TimeBarRow row = model.getRow(r);
+      ArrayList<Interval> intervals = (ArrayList<Interval>)row.getIntervals(date);
+
+      System.out.println(intervals);
+      /* Ugly, but can do nothing */
+      ArrayList<EventInterval> eventIntervals = new ArrayList<>(intervals.size());
+      for (Interval i : intervals) {
+        eventIntervals.add((EventInterval)i);
       }
-    });
+
+      /* If that video is present on that date, add it to the list */
+      if (!intervals.isEmpty()) {
+        Media m = timelines()[r].getMedia();
+        m.setIntervals(eventIntervals);
+        list.add(m);
+      }
+    }
     return list;
   }
 
@@ -49,6 +65,7 @@ public final class TimelineModel extends Model {
       TimeBarRow row = model.getRow(r);
       Iterator it = row.getIntervals().iterator();
       while (it.hasNext()) {
+
         Interval interval = (Interval) it.next();
         consumer.accept(interval);
       }
@@ -98,4 +115,12 @@ public final class TimelineModel extends Model {
   public static JaretDate getMarkerTime() {
     return marker.getDate();
   }
+
+    public static TimeBarViewer getTbv() {
+        return _tbv;
+    }
+
+    public void setTbv(TimeBarViewer _tbv) {
+        this._tbv = _tbv;
+    }
 }
