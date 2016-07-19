@@ -15,6 +15,4 @@ public interface Media {
     void addFilter(Filter filter);
     Time getDuration();
     String getName();
-    ArrayList<EventInterval> getIntervals();
-    void setIntervals(ArrayList<EventInterval> intervals);
 }

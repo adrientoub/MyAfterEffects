@@ -53,7 +53,7 @@ public final class TimelineModel extends Model {
       /* If that video is present on that date, add it to the list */
       if (!intervals.isEmpty()) {
         Media m = timelines()[r].getMedia();
-        m.setIntervals(eventIntervals);
+        // m.setIntervals(eventIntervals);
         list.add(m);
       }
     }

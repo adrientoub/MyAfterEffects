@@ -27,7 +27,6 @@ public class Video implements Media {
     private Time duration;
     private VideoCapture videoCapture;
     private File file;
-    private ArrayList<EventInterval> intervals;
 
     private static BufferedImage Mat2bufferedImage(Mat image) {
         int bufferSize = image.channels() * image.cols() * image.rows();
@@ -57,8 +56,6 @@ public class Video implements Media {
             duration = new Time((long) (frameCount / fps));
         else
             duration = new Time(nbFrames);
-
-        setIntervals(null);
     }
 
     public BufferedImage getImage(int frameNb) {
@@ -108,18 +105,5 @@ public class Video implements Media {
 
     public String getName() {
         return file.getName();
-    }
-
-    /* A video can be split in several intervals */
-    public void setIntervals(ArrayList<EventInterval> intervals) {
-        /* No intervals, mean video is new in the software */
-        if (intervals == null)
-            this.intervals = new ArrayList<>();
-        else
-            this.intervals = intervals;
-    }
-
-    public ArrayList<EventInterval> getIntervals() {
-        return intervals;
     }
 }
