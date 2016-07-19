@@ -64,6 +64,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     _tbv.setHierarchyWidth(0);
     _tbv.setTimeScalePosition(TimeBarViewer.TIMESCALE_POSITION_TOP);
     _tbv.setYAxisWidth(100);
+    _tm.setDate(start);
   }
 
   public JPanel render() {
