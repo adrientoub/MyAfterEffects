@@ -55,12 +55,9 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     DefaultRowHeader header = new DefaultRowHeader(name);
     EventTimeBarRow row = new EventTimeBarRow(header);
 
-    // kat1
-        EventInterval interval = new EventInterval(start.copy(), end.copy());
-
-            interval = new EventInterval(start.copy().advanceHours(0), start.copy().advanceHours(0 * 3 + 3));
-            interval.setTitle("short5.1.");
-            row.addInterval(interval);
+    EventInterval interval = new EventInterval(start.copy().advanceHours(0), start.copy().advanceHours(3));
+    interval.setTitle("short5.1.");
+    row.addInterval(interval);
 
     ((DefaultTimeBarModel)flatModel).addRow(row);
     _tbv.setModel(flatModel);
@@ -187,11 +184,11 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       }
 
       public void markerDragStarted(TimeBarMarker marker) {
-        System.out.println("Marker drag started "+marker);
+        TimelineView.this.controller().setMarker(marker);
       }
 
       public void markerDragStopped(TimeBarMarker marker) {
-        System.out.println("Marker drag stopped "+marker);
+        TimelineView.this.controller().setMarker(marker);
       }
 
     });
@@ -204,7 +201,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     _tbv.registerTimeBarRenderer(EventInterval.class, new EventRenderer());
 
     // add a marker
-    _tm = new TimeBarMarkerImpl(true, _tbv.getModel().getMinDate().copy().advanceHours(3));
+    _tm = new TimeBarMarkerImpl(true, _tbv.getModel().getMinDate().copy());
     _tm.setDescription("Timebarmarker");
     _tbv.addMarker(_tm);
 

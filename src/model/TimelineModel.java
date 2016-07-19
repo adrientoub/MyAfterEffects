@@ -2,6 +2,9 @@
 package model;
 
 import de.jaret.util.date.Interval;
+import de.jaret.util.date.JaretDate;
+import de.jaret.util.ui.timebars.TimeBarMarker;
+import de.jaret.util.ui.timebars.TimeBarMarkerImpl;
 import de.jaret.util.ui.timebars.model.TimeBarModel;
 import de.jaret.util.ui.timebars.model.TimeBarRow;
 import framework.Application;
@@ -19,17 +22,18 @@ import java.util.function.Consumer;
 
 public final class TimelineModel extends Model {
   private Collection<Timeline> timelines = new LinkedHashSet<>();
+  private static TimeBarMarker marker = new TimeBarMarkerImpl(true, null);
 
   public TimelineModel(final Application application) {
     super(application);
-    this.on("video:new", (Video v) -> add(v));
+    this.on("media:new", this::add);
   }
 
   public Timeline[] timelines() {
     return this.timelines.toArray(new Timeline[this.timelines.size()]);
   }
 
-  public static ArrayList<Video> GetVideosAtFrame(int frame_nb) {
+  public static ArrayList<Video> GetVideosAtFrame(JaretDate date) {
     ArrayList<Video> list = new ArrayList<>();
     forEachInterval(null, new Consumer<Interval>() {
       @Override
@@ -84,5 +88,14 @@ public final class TimelineModel extends Model {
 
     this.timelines.clear();
     this.emit("timelines:changed");
+  }
+
+  public void setMarker(TimeBarMarker m) {
+    this.emit("marker:changed", m.getDate());
+    marker = m;
+  }
+
+  public static JaretDate getMarkerTime() {
+    return marker.getDate();
   }
 }

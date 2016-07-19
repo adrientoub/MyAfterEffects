@@ -7,6 +7,7 @@ import controller.PreviewController;
 import framework.Application;
 import framework.ImagePanel;
 import framework.View;
+import manager.Media;
 import manager.Video;
 import model.PreviewModel;
 
@@ -37,11 +38,11 @@ public final class PreviewView extends View<PreviewModel, PreviewController> {
 
     imagePanel = new ImagePanel(this.model().image());
 
-    this.on("video:new", this::handle);
+    this.on("media:new", this::handle);
   }
 
-  private void handle(Video v) {
-    imagePanel.setImage(v.getImage(250));
+  private void handle(Media m) {
+    imagePanel.setImage(m.getImage(0));
     imagePanel.repaint();
   }
 

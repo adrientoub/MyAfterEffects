@@ -1,6 +1,7 @@
 
 package controller;
 
+import de.jaret.util.ui.timebars.TimeBarMarker;
 import framework.Application;
 import framework.Controller;
 import manager.Timeline;
@@ -17,5 +18,9 @@ public final class TimelineController extends Controller<TimelineModel, Timeline
 
   public void clear() {
     this.model().clear();
+  }
+
+  public void setMarker(TimeBarMarker marker) {
+    this.model().setMarker(marker);
   }
 }

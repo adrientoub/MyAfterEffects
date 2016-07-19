@@ -3,6 +3,7 @@ package model;
 
 import framework.Application;
 import framework.Model;
+import manager.Media;
 import manager.Video;
 
 import javax.swing.*;
@@ -23,8 +24,8 @@ public final class MenuModel extends Model {
     if (selected == null)
       throw new IllegalArgumentException("User didn't select any file.");
     else {
-        Video v = new Video(selected);
-        this.emit("video:new", v);
+        Media m = new Video(selected);
+        this.emit("media:new", m);
     }
   }
 
