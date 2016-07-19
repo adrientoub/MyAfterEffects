@@ -12,6 +12,7 @@ import de.jaret.util.ui.timebars.strategy.IIntervalSelectionStrategy;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
 import de.jaret.util.ui.timebars.swing.renderer.DefaultTitleRenderer;
 import framework.Application;
+import manager.Media;
 import manager.Timeline;
 import framework.View;
 import model.TimelineModel;
@@ -43,18 +44,18 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     this.model(new TimelineModel(application));
     this.controller(new TimelineController(application));
 
-    this.on("timeline:new", (Timeline t) -> addRow(t.getMedia().getName()));
+    this.on("timeline:new", (Timeline t) -> addRow(t.getMedia()));
   }
 
-  private void addRow(String name) {
+  private void addRow(Media media) {
     JaretDate start = new JaretDate();
     start.setDateTime(0, 0, 0, 0, 0, 0);
 
-    DefaultRowHeader header = new DefaultRowHeader(name);
+    DefaultRowHeader header = new DefaultRowHeader(media.getName());
     EventTimeBarRow row = new EventTimeBarRow(header);
 
-    EventInterval interval = new EventInterval(start.copy().advanceHours(0), start.copy().advanceHours(3));
-    interval.setTitle("short5.1.");
+    EventInterval interval = new EventInterval(start.copy(), start.copy().advanceMillis(media.getDuration()));
+    interval.setTitle(media.getName());
     row.addInterval(interval);
 
     ((DefaultTimeBarModel)flatModel).addRow(row);
