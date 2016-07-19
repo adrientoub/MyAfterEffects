@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 
 public final class TimelineModel extends Model {
   private static Collection<Timeline> timelines = new LinkedHashSet<>();
-  private static TimeBarMarker marker = new TimeBarMarkerImpl(true, null);
+  private static TimeBarMarker marker = new TimeBarMarkerImpl(true, new JaretDate(0, 0, 0, 0, 0, 0));
   static TimeBarViewer _tbv;
 
   public TimelineModel(final Application application) {
@@ -40,7 +40,6 @@ public final class TimelineModel extends Model {
     TimeBarModel model = getTbv().getModel();
 
     for (int r = 0; r < model.getRowCount(); r++) {
-      System.out.println("in row");
       TimeBarRow row = model.getRow(r);
       ArrayList<Interval> intervals = (ArrayList<Interval>)row.getIntervals(date);
 
