@@ -62,6 +62,7 @@ public final class PreviewView extends View<PreviewModel, PreviewController> {
     JPanel viewPanel = new JPanel(new BorderLayout());
     viewPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+    imagePanel.setContainingPanel(viewPanel);
     viewPanel.add(imagePanel);
 
     return viewPanel;

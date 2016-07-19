@@ -11,6 +11,7 @@ public class ImagePanel extends JPanel {
     private int width;
     private int height;
     private BufferedImage image;
+    private JPanel containingPanel;
 
     /**
      * Create the ImagePanel
@@ -53,14 +54,24 @@ public class ImagePanel extends JPanel {
         setPreferredSize(new Dimension(width, height));
     }
 
+    public void setContainingPanel(JPanel containingPanel) {
+        this.containingPanel = containingPanel;
+    }
+
     @Override
     public int getWidth() {
-        return width;
+        if (containingPanel == null) {
+            return width;
+        }
+        return containingPanel.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return height;
+        if (containingPanel == null) {
+            return height;
+        }
+        return containingPanel.getHeight();
     }
 
     public BufferedImage getImage() {
@@ -78,6 +89,6 @@ public class ImagePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(image, 0, 0, null);
+        g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
     }
 }
