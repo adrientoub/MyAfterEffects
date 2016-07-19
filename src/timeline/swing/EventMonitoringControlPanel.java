@@ -56,9 +56,7 @@ public class EventMonitoringControlPanel extends JPanel {
      * 
      */
     private void createControls(int initialSeconds) {
-        final double min = 1; // minimum value for seconds displayed
-        final double max = 3 * 365 * 24 * 60 * 60; // max nummber of seconds displayed (3 years in seconds)
-        final double slidermax = 1000; // slider maximum (does not really matter)
+        final double slidermax = 50; // slider maximum (does not really matter)
 
         _timeScaleSlider = new JSlider(0, (int) slidermax);
 
@@ -66,59 +64,25 @@ public class EventMonitoringControlPanel extends JPanel {
                 .getPreferredSize().height));
         add(_timeScaleSlider);
 
-        final double b = 1.0 / 100.0; // additional factor to reduce the absolut values in the exponent
-        final double faktor = (min - max) / (1 - Math.pow(2, slidermax * b)); // factor for the exp function
-        final double c = (min - faktor);
-
-        int initialSliderVal = calcInitialSliderVal(c, b, faktor, initialSeconds);
-        _timeScaleSlider.setValue((int) (slidermax- initialSliderVal));
+        int initialSliderVal = (int)slidermax / 2;
+        _timeScaleSlider.setValue(initialSliderVal);
 
 
         _timeScaleSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                final double x = slidermax - (double) _timeScaleSlider.getValue(); // reverse x
-                double seconds = c + faktor * Math.pow(2, x * b); // calculate the seconds to display
-                if (_viewer.isDisplayed(_marker.getDate())) {
-                    _viewer.setSecondsDisplayed((int) seconds, _marker.getDate());
-                }
+                _viewer.setSecondsDisplayed(_timeScaleSlider.getValue(), true);
             }
         });
-
-        _rowHeigthSlider = new JSlider(10, 300);
-        _rowHeigthSlider.setValue(_viewer.getRowHeight());
-        _rowHeigthSlider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                _viewer.setRowHeight(_rowHeigthSlider.getValue());
-            }
-        });
-        add(_rowHeigthSlider);
-
-        final JCheckBox markerInDiagramAreaCheck = new JCheckBox("Allow Marker drag in DiagramArea");
-        markerInDiagramAreaCheck.setSelected(_viewer.getMarkerDraggingInDiagramArea());
-        markerInDiagramAreaCheck.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                _viewer.setMarkerDraggingInDiagramArea(markerInDiagramAreaCheck.isSelected());
-            }
-        });
-        add(markerInDiagramAreaCheck);
 
         BoxTimeScaleRenderer btscr = new BoxTimeScaleRenderer();
+
         _viewer.setTimeScaleRenderer(btscr);
         if (_viewer.getGridRenderer() instanceof DefaultGridRenderer) {
             ((DefaultGridRenderer) _viewer.getGridRenderer()).setTickProvider(btscr);
         }
 
+        _viewer.setSecondsDisplayed(20, true);
+
         _viewer.getRegionRectEnable();
     }
-
-    private int calcInitialSliderVal(double c, double b, double faktor, int seconds) {
-        double x = 1 / b * log2((seconds - c) / faktor);
-
-        return (int) x;
-    }
-
-    private double log2(double a) {
-        return Math.log(a) / Math.log(2);
-    }
-
 }
