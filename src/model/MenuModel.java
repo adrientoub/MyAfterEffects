@@ -28,7 +28,7 @@ public final class MenuModel extends Model {
             throw new IllegalArgumentException("User didn't select any file.");
         else {
             String extension = getExtension(selected);
-            Media m = null;
+            Media m;
             if (extension.equals("jpg") || extension.equals("png") || extension.equals("bmp") || extension.equals("jpeg") || extension.equals("gif"))
                 m = new Image(selected);
             else

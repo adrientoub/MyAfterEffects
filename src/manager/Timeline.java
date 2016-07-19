@@ -6,8 +6,8 @@ package manager;
 public class Timeline {
     private Media media;
 
-    public Timeline(Video v) {
-        this.media = v;
+    public Timeline(Media m) {
+        this.media = m;
     }
 
     public Media getMedia() {

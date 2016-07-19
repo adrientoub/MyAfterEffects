@@ -77,8 +77,8 @@ public final class TimelineModel extends Model {
     return result;
   }
 
-  public void add(Video v) {
-    Timeline t = new Timeline(v);
+  public void add(Media media) {
+    Timeline t = new Timeline(media);
     timelines.add(t);
     this.emit("timeline:new", t);
   }
