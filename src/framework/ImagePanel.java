@@ -58,12 +58,26 @@ public class ImagePanel extends JPanel {
         this.containingPanel = containingPanel;
     }
 
+    private Dimension getScaledSize() {
+        double ws = containingPanel.getWidth();
+        double hs = containingPanel.getHeight();
+        double rs = ws / hs;
+        double ri = width / (double) height;
+        if (rs > ri) {
+            return new Dimension((int) (width * hs) / height, (int) hs);
+        }
+        else {
+            return new Dimension((int) ws, (int) (height * ws) / width);
+        }
+    }
+
     @Override
     public int getWidth() {
         if (containingPanel == null) {
             return width;
         }
-        return containingPanel.getWidth();
+
+        return (int) getScaledSize().getWidth();
     }
 
     @Override
@@ -71,7 +85,8 @@ public class ImagePanel extends JPanel {
         if (containingPanel == null) {
             return height;
         }
-        return containingPanel.getHeight();
+
+        return (int) getScaledSize().getHeight();
     }
 
     public BufferedImage getImage() {
