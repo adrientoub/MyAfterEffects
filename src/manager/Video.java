@@ -8,7 +8,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
-import java.nio.Buffer;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import static org.opencv.videoio.Videoio.*;
 /**
  * Created by Damien on 17/07/2016.
  */
-public class Video {
+public class Video implements Media {
     private List<Filter> filters;
     private double fps;
     private int nbFrames;
