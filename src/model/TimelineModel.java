@@ -35,7 +35,7 @@ public final class TimelineModel extends Model {
     return timelines.toArray(new Timeline[timelines.size()]);
   }
 
-  public static ArrayList<Pair<Long, Media>> GetMediasAtFrame(JaretDate date) {
+  public static ArrayList<Pair<Long, Media>> getMediasAtDate(JaretDate date) {
     ArrayList<Pair<Long, Media>> pairs = new ArrayList<>();
     TimeBarModel model = getTbv().getModel();
 
@@ -64,17 +64,6 @@ public final class TimelineModel extends Model {
         consumer.accept(interval);
       }
     }
-  }
-
-  private static double getIntervalSum(TimeBarRow row) {
-    double result = 0;
-    Iterator it = row.getIntervals().iterator();
-    while (it.hasNext()) {
-      Interval interval = (Interval) it.next();
-      result += interval.getEnd().diffMinutes(interval.getBegin());
-    }
-
-    return result;
   }
 
   public void add(Media media) {

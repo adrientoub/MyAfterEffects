@@ -5,6 +5,7 @@ package view;
 
 import controller.PreviewController;
 import de.jaret.util.date.JaretDate;
+import de.jaret.util.misc.Pair;
 import framework.Application;
 import framework.ImagePanel;
 import framework.View;
@@ -15,6 +16,9 @@ import model.PreviewModel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
+
+import static model.TimelineModel.getMediasAtDate;
 
 // AWT utilities
 // Swing utilities
@@ -49,10 +53,9 @@ public final class PreviewView extends View<PreviewModel, PreviewController> {
         imagePanel.repaint();
     }
 
-    /* TODO */
     private void handleMarker(JaretDate markerDate) {
-        /*imagePanel.setImage(m.getImage(0));
-        imagePanel.repaint();*/
+      ArrayList<Pair<Long, Media>> pairs = getMediasAtDate(markerDate);
+      /* TODO FIXME */
     }
 
   /**
