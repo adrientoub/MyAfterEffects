@@ -3,6 +3,7 @@ package model;
 
 import de.jaret.util.date.Interval;
 import de.jaret.util.date.JaretDate;
+import de.jaret.util.misc.Pair;
 import de.jaret.util.ui.timebars.TimeBarMarker;
 import de.jaret.util.ui.timebars.TimeBarMarkerImpl;
 import de.jaret.util.ui.timebars.model.TimeBarModel;
@@ -34,8 +35,8 @@ public final class TimelineModel extends Model {
     return timelines.toArray(new Timeline[timelines.size()]);
   }
 
-  public static ArrayList<Media> GetMediasAtFrame(JaretDate date) {
-    ArrayList<Media> list = new ArrayList<>();
+  public static ArrayList<Pair<Long, Media>> GetMediasAtFrame(JaretDate date) {
+    ArrayList<Pair<Long, Media>> pairs = new ArrayList<>();
     TimeBarModel model = getTbv().getModel();
 
     for (int r = 0; r < model.getRowCount(); r++) {
@@ -43,21 +44,14 @@ public final class TimelineModel extends Model {
       TimeBarRow row = model.getRow(r);
       ArrayList<Interval> intervals = (ArrayList<Interval>)row.getIntervals(date);
 
-      System.out.println(intervals);
-      /* Ugly, but can do nothing */
-      ArrayList<EventInterval> eventIntervals = new ArrayList<>(intervals.size());
-      for (Interval i : intervals) {
-        eventIntervals.add((EventInterval)i);
-      }
-
       /* If that video is present on that date, add it to the list */
       if (!intervals.isEmpty()) {
+        Interval i = intervals.get(0);
         Media m = timelines()[r].getMedia();
-        // m.setIntervals(eventIntervals);
-        list.add(m);
+        pairs.add(new Pair<>(date.diffMilliSeconds(i.getBegin()), m));
       }
     }
-    return list;
+    return pairs;
   }
 
   private static void forEachInterval(TimeBarModel model, Consumer<Interval> consumer) {

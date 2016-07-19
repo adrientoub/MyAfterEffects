@@ -2,6 +2,7 @@
 package controller;
 
 import de.jaret.util.date.JaretDate;
+import de.jaret.util.misc.Pair;
 import framework.Application;
 import framework.Controller;
 import manager.Media;
@@ -32,9 +33,9 @@ public final class MenuController extends Controller<MenuModel, MenuView> {
         break;
       case "Render":
         /* TODO Adrien */
-        ArrayList<Media> medias = TimelineModel.GetMediasAtFrame(TimelineModel.getMarkerTime());
-        for (Media m : medias)
-          System.out.println(m.getName());
+        ArrayList<Pair<Long, Media>> medias = TimelineModel.GetMediasAtFrame(TimelineModel.getMarkerTime());
+        for (Pair<Long, Media> p : medias)
+          System.out.println(p.getLeft() + " " + p.getRight().getName());
         break;
     }
   }
