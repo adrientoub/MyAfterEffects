@@ -11,24 +11,24 @@ import java.io.IOException;
 
 
 public final class PreviewModel extends Model {
-  BufferedImage image;
+    BufferedImage image;
 
-  public PreviewModel(final Application application) {
-    super(application);
+    public PreviewModel(final Application application) {
+        super(application);
 
-    try {
-      image = ImageIO.read(new File("assets/preview.png"));
-    } catch (IOException ex) {
-      System.err.println(ex.getMessage());
+        try {
+            image = ImageIO.read(new File("assets/preview.png"));
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
-  }
 
-  public BufferedImage image() {
-    return image;
-  }
+    public BufferedImage image() {
+        return image;
+    }
 
-  public void clear() {
-    image = null;
-    this.emit("preview:changed");
-  }
+    public void clear() {
+        image = null;
+        this.emit("preview:changed");
+    }
 }
