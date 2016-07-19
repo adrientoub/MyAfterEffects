@@ -18,6 +18,6 @@ public class Grayscale implements Filter {
                 bi.setRGB(i, j, newColor.getRGB());
             }
         }
-        return null;
+        return bi;
     }
 }

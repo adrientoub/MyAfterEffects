@@ -67,6 +67,8 @@ public class Video implements Media {
                 image = filter.applyFilter(image);
             }
             return image;
+        } else {
+            System.err.println("Impossible to read frame " + frameNb + " of video " + getName());
         }
         return null;
     }
