@@ -11,6 +11,7 @@ import model.TimelineModel;
 import view.MenuView;
 import view.TimelineView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public final class MenuController extends Controller<MenuModel, MenuView> {
@@ -27,7 +28,7 @@ public final class MenuController extends Controller<MenuModel, MenuView> {
       case "New":
         try {
           this.model().newFile();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | IOException e) {
           System.err.println(e.getMessage());
         }
         break;

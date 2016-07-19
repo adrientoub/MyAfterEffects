@@ -18,21 +18,19 @@ import java.util.List;
 public class Image implements Media {
     private BufferedImage image;
     private List<Filter> filters;
-    private Time duration;
+    private long duration = 5;
     private String name;
 
     public Image(File file) throws IOException {
         image = ImageIO.read(file);
         name = file.getName();
         filters = new ArrayList<>();
-        duration = new Time(5);
     }
 
     public Image(BufferedImage image, String name) {
         this.name = name;
         this.image = image;
         filters = new ArrayList<>();
-        duration = new Time(5);
     }
 
     public static BufferedImage deepCopyBufferedImage(BufferedImage image) {
@@ -58,7 +56,7 @@ public class Image implements Media {
     }
 
     @Override
-    public Time getDuration() {
+    public long getDuration() {
         return duration;
     }
 

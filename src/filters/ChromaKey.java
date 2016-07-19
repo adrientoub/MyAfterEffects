@@ -1,7 +1,5 @@
 package filters;
 
-import de.jaret.util.misc.Pair;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 

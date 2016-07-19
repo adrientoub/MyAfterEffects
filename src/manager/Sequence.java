@@ -35,8 +35,8 @@ public class Sequence implements Media {
     }
 
     @Override
-    public Time getDuration() {
-        return new Time((long) ((endFrame - startFrame) / video.getFps()));
+    public long getDuration() {
+        return (long) ((endFrame - startFrame) * 1000.0 / video.getFps());
     }
 
     @Override

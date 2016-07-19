@@ -24,7 +24,7 @@ public class Video implements Media {
     private List<Filter> filters;
     private double fps;
     private int nbFrames;
-    private Time duration;
+    private long duration;
     private VideoCapture videoCapture;
     private File file;
 
@@ -53,9 +53,9 @@ public class Video implements Media {
         System.out.println("FPS: " + fps);
         System.out.println("Frame count: " + frameCount);
         if (fps > 0)
-            duration = new Time((long) (frameCount / fps));
+            duration = (long) (frameCount * 1000.0 / fps);
         else
-            duration = new Time(nbFrames);
+            duration = nbFrames * 1000;
     }
 
     public BufferedImage getImage(int frameNb) {
@@ -95,11 +95,11 @@ public class Video implements Media {
         this.nbFrames = nbFrames;
     }
 
-    public Time getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(Time duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 

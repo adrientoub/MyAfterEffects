@@ -11,6 +11,6 @@ import java.sql.Time;
 public interface Media {
     BufferedImage getImage(int frameNb);
     void addFilter(Filter filter);
-    Time getDuration();
+    long getDuration();
     String getName();
 }
