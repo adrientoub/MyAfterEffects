@@ -72,4 +72,9 @@ public class Image implements Media {
     public String getName() {
         return name;
     }
+
+    @Override
+    public List<Filter> getFilters() {
+        return this.filters;
+    }
 }

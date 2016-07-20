@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Adrien on 20/07/2016.
  */
-public class Sequence implements Media {
+/*public class Sequence implements Media {
     private Video video;
     private int startFrame;
     private int endFrame;
@@ -53,4 +53,4 @@ public class Sequence implements Media {
     public String getName() {
         return video.getName();
     }
-}
+}*/

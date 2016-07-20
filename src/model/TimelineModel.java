@@ -8,17 +8,15 @@ import de.jaret.util.ui.timebars.TimeBarMarkerImpl;
 import de.jaret.util.ui.timebars.model.TimeBarModel;
 import de.jaret.util.ui.timebars.model.TimeBarRow;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
+import filters.*;
 import framework.Application;
 import framework.Model;
 import manager.Media;
 import manager.Timeline;
 import timeline.model.EventInterval;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.function.Consumer;
+import java.awt.*;
+import java.util.*;
 
 // Framework
 
@@ -26,10 +24,22 @@ public final class TimelineModel extends Model {
   private static Collection<Timeline> timelines = new LinkedHashSet<>();
   private static TimeBarMarker marker = new TimeBarMarkerImpl(true, new JaretDate(0, 0, 0, 0, 0, 0));
   static TimeBarViewer _tbv;
+  HashMap<String, Filter> hashtable;
 
   public TimelineModel(final Application application) {
     super(application);
     this.on("media:new", this::add);
+
+    initFilters();
+  }
+
+  private void initFilters() {
+    hashtable = new HashMap<>();
+    hashtable.put("Binarize", new Binarize());
+    hashtable.put("ChromaKey", new ChromaKey(Color.green));
+    hashtable.put("Grayscale", new Grayscale());
+    hashtable.put("LowPass", new LowPass());
+    hashtable.put("Sepia", new Sepia());
   }
 
   public static ArrayList<Pair<Long, Media>> getMediasAtDate(JaretDate date) {
@@ -90,4 +100,8 @@ public final class TimelineModel extends Model {
     public void setTbv(TimeBarViewer _tbv) {
         this._tbv = _tbv;
     }
+
+  public HashMap<String, Filter> getHashtable() {
+    return hashtable;
+  }
 }

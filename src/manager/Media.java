@@ -4,6 +4,8 @@ import filters.Filter;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Adrien on 19/07/2016.
@@ -29,6 +31,12 @@ public interface Media {
      * @param filter the filter to add.
      */
     void addFilter(Filter filter);
+
+    /**
+     * Add a filter to the Media
+     * @return Filters of this Media
+     */
+     List<Filter> getFilters();
 
     /**
      * Get the duration of the Media on the Timeline

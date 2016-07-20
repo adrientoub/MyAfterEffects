@@ -88,6 +88,11 @@ public class Video implements Media {
         filters.add(filter);
     }
 
+    @Override
+    public List<Filter> getFilters() {
+        return this.filters;
+    }
+
     public double getFps() {
         return fps;
     }

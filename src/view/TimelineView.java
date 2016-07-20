@@ -70,6 +70,10 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     ((TimeBarMarkerImpl)_tbv.getMarkers().get(0)).setDate(date);
   }
 
+  public JaretDate getMarkerTime() {
+    return ((TimeBarMarkerImpl)_tbv.getMarkers().get(0)).getDate();
+  }
+
   public JPanel render() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setSize(1400, 600);
@@ -200,7 +204,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
 
     // do not allow row selections
-    _tbv.getSelectionModel().setRowSelectionAllowed(false);
+    _tbv.getSelectionModel().setRowSelectionAllowed(true);
 
     // register additional renderer
     _tbv.registerTimeBarRenderer(EventInterval.class, new EventRenderer());
@@ -213,43 +217,9 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     // do not show the root node
     _tbv.setHideRoot(true);
 
-    /* TODO CLEAN DIRTY CODE */
     // add a popup menu for EventIntervals
-    Action action = new AbstractAction("IntervalAction") {
-      public void actionPerformed(ActionEvent e) {
-        System.out.println("run " + getValue(NAME));
-      }
-    };
     JPopupMenu menu = new JPopupMenu("Operations");
-    JMenu submenu = new JMenu("Filters");
-
-    HashMap<String, Filter> hashtable = new HashMap<>();
-    ArrayList<Filter> filters = new ArrayList<>();
-    hashtable.put("Binarize", new Binarize());
-    hashtable.put("ChromaKey", new ChromaKey(Color.green));
-    hashtable.put("Grayscale", new Grayscale());
-    hashtable.put("LowPass", new LowPass());
-    hashtable.put("Sepia", new Sepia());
-
-    filters.add(new Binarize());
-    filters.add(new ChromaKey(Color.green));
-    filters.add(new Grayscale());
-    filters.add(new LowPass());
-    filters.add(new Sepia());
-
-    for (Filter f : filters) {
-      submenu.add(f.getClass().getSimpleName());
-
-      JMenuItem item = submenu.getItem(submenu.getItemCount() - 1);
-      item.addActionListener(e -> {
-        if (selected != null) {
-          String filterString = ((JMenuItem)e.getSource()).getText();
-          System.out.println(filterString);
-          selected.addFilter(hashtable.get(filterString));
-        }
-      });
-    }
-
+    JMenu submenu = addFiltersMenu();
 
     _tbv.addMouseListener(new MouseAdapter() {
       @Override
@@ -279,18 +249,8 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
     _tbv.setBodyContextMenu(menu);
 
-    // add a popup menu for the hierarchy
-    action = new AbstractAction("HierarchyAction") {
-      public void actionPerformed(ActionEvent e) {
-        System.out.println("run " + getValue(NAME));
-      }
-    };
-    menu = new JPopupMenu("Operations");
-    menu.add(action);
-    _tbv.setHierarchyContextMenu(menu);
-
     // add a popup menu for the header
-    action = new AbstractAction("HeaderAction") {
+    Action action = new AbstractAction("HeaderAction") {
       public void actionPerformed(ActionEvent e) {
         System.out.println("run " + getValue(NAME));
       }
@@ -300,7 +260,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     _tbv.setHeaderContextMenu(menu);
 
     // add a popup menu for the time scale
-    action = new AbstractAction("TimeScaleAction") {
+    action = new AbstractAction("Move marker here") {
       public void actionPerformed(ActionEvent e) {
         System.out.println("run " + getValue(NAME));
       }
@@ -332,30 +292,29 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
     // go!
     panel.setVisible(true);
-    //panel.add
-    new Thread() {
-      @Override
-      public void run() {
-        //startChanging(flatModel);
-      }
-    }.start();
-
-      this.model().setTbv(_tbv);
+    this.model().setTbv(_tbv);
     return panel;
   }
 
-  public void setEndDate(TimeBarViewer tbv, JaretDate endDate) {
-    int secondsDisplayed = tbv.getSecondsDisplayed();
-    JaretDate startDate = endDate.copy().advanceSeconds(-secondsDisplayed);
-    tbv.setStartDate(startDate);
-  }
+  private JMenu addFiltersMenu() {
+    JMenu submenu = new JMenu("Filters");
 
+    ArrayList<Filter> filters = this.controller().getFilters();
 
-  boolean isInRange(JaretDate date, double min, double max) {
-    int secondsDisplayed = _tbv.getSecondsDisplayed();
-    JaretDate minDate = _tbv.getStartDate().copy().advanceSeconds(min*secondsDisplayed);
-    JaretDate maxDate = _tbv.getStartDate().copy().advanceSeconds(max*secondsDisplayed);
-    return minDate.compareTo(date)>0 && maxDate.compareTo(date)<0;
+    for (Filter f : filters) {
+      submenu.add(f.getClass().getSimpleName());
+
+      JMenuItem item = submenu.getItem(submenu.getItemCount() - 1);
+      item.addActionListener(e -> {
+        if (selected != null) {
+          String filterString = ((JMenuItem)e.getSource()).getText();
+          System.out.println(filterString);
+          selected.addFilter(filters.stream().filter(choice -> choice.getClass().getSimpleName().equals(filterString)).findFirst().get());
+          TimelineView.this.emit("filter:applied", TimelineView.this.getMarkerTime());
+        }
+      });
+    }
+    return submenu;
   }
 
   class RunMarkerAction extends AbstractAction {
