@@ -13,7 +13,7 @@ import framework.Application;
 import framework.Model;
 import manager.Media;
 import manager.Timeline;
-import timeline.model.EventInterval;
+import timeline.EventInterval;
 
 import java.awt.*;
 import java.util.*;

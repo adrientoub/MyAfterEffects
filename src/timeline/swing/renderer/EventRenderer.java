@@ -24,7 +24,7 @@ import de.jaret.util.swing.GraphicsHelper;
 import de.jaret.util.ui.timebars.TimeBarViewerDelegate;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
 import de.jaret.util.ui.timebars.swing.renderer.TimeBarRenderer;
-import timeline.model.EventInterval;
+import timeline.EventInterval;
 
 import javax.swing.*;
 import java.awt.*;

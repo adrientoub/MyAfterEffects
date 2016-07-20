@@ -6,7 +6,6 @@ import de.jaret.util.date.Interval;
 import de.jaret.util.date.JaretDate;
 import de.jaret.util.ui.timebars.TimeBarMarker;
 import de.jaret.util.ui.timebars.TimeBarMarkerImpl;
-import de.jaret.util.ui.timebars.TimeBarViewerDelegate;
 import de.jaret.util.ui.timebars.model.*;
 import de.jaret.util.ui.timebars.strategy.IIntervalSelectionStrategy;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
@@ -17,7 +16,7 @@ import manager.Media;
 import manager.Timeline;
 import framework.View;
 import model.TimelineModel;
-import timeline.model.*;
+import timeline.EventInterval;
 import timeline.swing.*;
 import timeline.swing.renderer.EventMonitorHeaderRenderer;
 import timeline.swing.renderer.EventRenderer;
@@ -52,7 +51,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     start.setDateTime(0, 0, 0, 0, 0, 0);
 
     DefaultRowHeader header = new DefaultRowHeader(media.getName());
-    EventTimeBarRow row = new EventTimeBarRow(header);
+    DefaultTimeBarRowModel row = new DefaultTimeBarRowModel(header);
 
     EventInterval interval = new EventInterval(start.copy(), start.copy().advanceMillis(media.getDuration()), media);
     interval.setTitle(media.getName());
@@ -122,56 +121,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       // in general draw overlapping
       _tbv.setDrawOverlapping(true);
 
-      // allow different row heights
-      _tbv.getTimeBarViewState().setUseVariableRowHeights(true);
-
-      // add a double click listener for checking on the header
-      _tbv.addMouseListener(new MouseAdapter() {
-
-        public void mouseClicked(MouseEvent e) {
-          if (e.getClickCount() == 2) {
-            Point origin = e.getPoint();
-            if (_tbv.getDelegate().getYAxisRect().contains(origin)) {
-              TimeBarRow row = _tbv.getRowForXY(origin.x, origin.y);
-              if (row != null) {
-                  System.out.println("Index in " + (origin.y / _tbv.getRowHeight() - 1));
-                if (row instanceof EventTimeBarRow) {
-                  EventTimeBarRow erow = (EventTimeBarRow) row;
-                  if (!erow.isExpanded()) {
-                    // expand
-                    _tbv.getTimeBarViewState().setDrawOverlapping(row, false);
-                    _tbv.getTimeBarViewState().setRowHeight(row, calculateRowHeight(_tbv.getDelegate(), _tbv.getTimeBarViewState(), row));
-                    erow.setExpanded(true);
-                  } else {
-                    // fold
-                    _tbv.getTimeBarViewState().setDrawOverlapping(row, true);
-                    _tbv.getTimeBarViewState().setRowHeight(row, _tbv.getTimeBarViewState().getDefaultRowHeight());
-                    erow.setExpanded(false);
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        /**
-         * Calculate the optimal row height
-         * @param delegate
-         * @param timeBarViewState
-         * @param row
-         * @return
-         */
-        public int calculateRowHeight(TimeBarViewerDelegate delegate,
-                                      ITimeBarViewState timeBarViewState, TimeBarRow row) {
-          int maxOverlap = timeBarViewState.getDefaultRowHeight();
-          int height = delegate.getMaxOverlapCount(row) * maxOverlap;
-          return height;
-        }
-
-
-
-      });
-
     // change listener
     _tbv.addTimeBarChangeListener(new ITimeBarChangeListener() {
 
@@ -237,16 +186,9 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     _tbv.registerPopupMenu(EventInterval.class, menu);
 
     // add a popup menu for the body
-    final Action bodyaction = new AbstractAction("BodyAction") {
-      public void actionPerformed(ActionEvent e) {
-        System.out.println("run " + getValue(NAME));
-      }
-    };
     menu = new JPopupMenu("Operations");
-    menu.add(bodyaction);
     menu.add(new RunMarkerAction(_tbv));
     menu.add(new PauseMarkerAction(_tbv));
-
     _tbv.setBodyContextMenu(menu);
 
     // add a popup menu for the header
