@@ -307,29 +307,74 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       _tbv = tbv;
     }
 
+    /* TODO : cast to Video fail if media is a sequence */
     public void actionPerformed(ActionEvent event) {
       TBRect rect = _tbv.getRegionRect();
       if (rect != null) {
         /* Should only contains at most one */
         ArrayList<Interval> intervals = (ArrayList<Interval>) rect.startRow.getIntervals(rect.startDate, rect.endDate);
-        if (intervals.stream().findFirst().isPresent()) {
+        if (intervals.stream().count() > 0 && intervals.stream().findFirst().isPresent()) {
           EventInterval interval = (EventInterval)intervals.stream().findFirst().get();
+          int firstFrame, lastFrame;
 
+          /* First : [ |---]---| */
+          if (interval.getBegin().diffMilliSeconds(rect.startDate) > 0) {
+            firstFrame = interval.getMedia().getFrameFromMilliseconds(rect.endDate.diffMilliSeconds(interval.getBegin()));
+            lastFrame = interval.getMedia().getFrameFromMilliseconds(interval.getEnd().diffMilliSeconds(interval.getBegin()));
+
+            System.out.println(firstFrame);
+            System.out.println(lastFrame);
+
+            EventInterval newMiddleInterval = new EventInterval(rect.endDate, interval.getEnd(),
+                    new Sequence((Video) interval.getMedia(), firstFrame, lastFrame));
+
+            /* Add new interval to the timeline */
+            ((DefaultTimeBarRowModel)rect.startRow).addInterval(newMiddleInterval);
+
+            interval.setEnd(rect.endDate);
+            System.out.println("[ ---]---");
+          }
+          /* Second : |---[---| ] */
+          else if (rect.endDate.diffMilliSeconds(interval.getEnd()) > 0) {
+            System.out.println("---[--- ]");
+          }
+          /* Third : |-[----]-| */
+          else {
+            System.out.println("---[---]---");
           /* Will be messy if rectangle is before start of video */
-          int firstFrame = interval.getMedia().getFrameFromMilliseconds(rect.startDate.diffMilliSeconds(interval.getBegin()));
-          int lastFrame = interval.getMedia().getFrameFromMilliseconds(rect.endDate.diffMilliSeconds(interval.getBegin()));
+            firstFrame = interval.getMedia().getFrameFromMilliseconds(rect.startDate.diffMilliSeconds(interval.getBegin()));
+            lastFrame = interval.getMedia().getFrameFromMilliseconds(rect.endDate.diffMilliSeconds(interval.getBegin()));
 
-          System.out.println(firstFrame);
-          System.out.println(lastFrame);
+            System.out.println(firstFrame);
+            System.out.println(lastFrame);
 
-          EventInterval newInterval = new EventInterval(rect.startDate, interval.getEnd(),
-                  new Sequence((Video)interval.getMedia(), firstFrame, lastFrame));
+            EventInterval newMiddleInterval = new EventInterval(rect.startDate, rect.endDate,
+                    new Sequence((Video) interval.getMedia(), firstFrame, lastFrame));
+
+            firstFrame = interval.getMedia().getFrameFromMilliseconds(rect.endDate.diffMilliSeconds(interval.getBegin()));
+            lastFrame = interval.getMedia().getFrameFromMilliseconds(interval.getEnd().diffMilliSeconds(interval.getBegin()));
+
+            System.out.println(firstFrame);
+            System.out.println(lastFrame);
+
+            EventInterval newEndInterval = new EventInterval(rect.endDate, interval.getEnd(),
+                    new Sequence((Video) interval.getMedia(),
+                            firstFrame,
+                            lastFrame));
+
+          /* Create third sequence if needed */
+
 
           /* Add new interval to the timeline */
-          ((DefaultTimeBarRowModel)rect.startRow).addInterval(newInterval);
+            ((DefaultTimeBarRowModel) rect.startRow).addInterval(newMiddleInterval);
+            ((DefaultTimeBarRowModel) rect.startRow).addInterval(newEndInterval);
 
-          /* Split the interval */
-          interval.setEnd(rect.startDate);
+          /* Split the first interval */
+            interval.setEnd(rect.startDate);
+
+          }
+          /* Clear the rectangle selection */
+          _tbv.clearRegionRect();
         }
       }
     }
