@@ -38,6 +38,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
   TimeBarViewer _tbv;
   TimeBarMarkerImpl _tm;
   TimeBarModel flatModel;
+  private boolean stopped = true;
 
   public TimelineView(final Application application) {
     super(application);
@@ -251,6 +252,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     menu = new JPopupMenu("Operations");
     menu.add(bodyaction);
     menu.add(new RunMarkerAction(_tbv));
+    menu.add(new PauseMarkerAction(_tbv));
 
     _tbv.setBodyContextMenu(menu);
 
@@ -337,10 +339,11 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       ActionListener al = new ActionListener() {
 
         public void actionPerformed(ActionEvent e) {
-          JaretDate deltaDate = _tm.getDate().copy().advanceMillis(40);
+          JaretDate deltaDate = _tm.getDate().copy().advanceMillis(100);
           _tm.setDate(deltaDate);
           TimelineView.this.emit("marker:changed", deltaDate);
-          if (_tm.getDate().compareTo(_tbv.getModel().getMaxDate())>0) {
+          if (_tm.getDate().compareTo(_tbv.getModel().getMaxDate())> 0 || TimelineView.this.stopped) {
+            TimelineView.this.stopped = true;
             timer.stop();
           }
         }
@@ -350,10 +353,22 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       timer.addActionListener(al);
       timer.setRepeats(true);
       timer.setDelay(40);
+      TimelineView.this.stopped = false;
       timer.start();
     }
 
   }
+
+  class PauseMarkerAction extends AbstractAction {
+    public PauseMarkerAction(TimeBarViewer tbv) {
+      super("Pause video");
+      _tbv = tbv;
+    }
+    public void actionPerformed(ActionEvent e) {
+      TimelineView.this.stopped = true;
+    }
+  }
+
   class TimeBarViewerDragGestureListener implements DragGestureListener {
     public void dragGestureRecognized(DragGestureEvent e) {
       Component c = e.getComponent();
