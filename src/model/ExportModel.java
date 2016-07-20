@@ -33,7 +33,9 @@ public final class ExportModel extends Model {
         ExecutorService pool = Executors.newFixedThreadPool(8);
         Queue<Future<BufferedImage>> frames = new ArrayDeque<>();
         for (int i = 0; i < max; i++) {
-            Callable<BufferedImage> gf = new GenerateFrame(new JaretDate(i * timeByFrame));
+            JaretDate jd = new JaretDate(0, 0, 0, 0, 0, 0);
+            jd.advanceMillis(i * timeByFrame);
+            Callable<BufferedImage> gf = new GenerateFrame(jd);
             Future<BufferedImage> future = pool.submit(gf);
             frames.add(future);
         }
