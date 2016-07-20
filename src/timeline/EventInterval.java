@@ -33,7 +33,6 @@ import java.util.ArrayList;
  * @version $Id: EventInterval.java 801 2008-12-27 22:44:54Z kliem $
  */
 public class EventInterval extends IntervalImpl {
-    private String _title;
     private Media media;
 
     public EventInterval(JaretDate from, JaretDate to, Media m) {
@@ -42,16 +41,12 @@ public class EventInterval extends IntervalImpl {
     }
 
     public String getTitle() {
-        return _title;
-    }
-
-    public void setTitle(String title) {
-        _title = title;
+        return media.getName();
     }
 
     @Override
     public String toString() {
-        return _title + ":" + super.toString();
+        return media.getName() + ":" + super.toString();
     }
 
     public ArrayList<Filter> getFilters() {

@@ -40,6 +40,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
   TimeBarModel flatModel;
   private boolean stopped = true;
   EventInterval selected = null;
+  DefaultTimeBarRowModel beforeDragRow;
 
   public TimelineView(final Application application) {
     super(application);
@@ -58,7 +59,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     DefaultTimeBarRowModel row = new DefaultTimeBarRowModel(header);
 
     EventInterval interval = new EventInterval(start.copy(), start.copy().advanceMillis(media.getDuration()), media);
-    interval.setTitle(media.getName());
     row.addInterval(interval);
 
     ((DefaultTimeBarModel)flatModel).addRow(row);
@@ -175,13 +175,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     JMenu submenu = addFiltersMenu();
 
     _tbv.addMouseListener(new MouseAdapter() {
-
-      @Override
-      public void mouseDragged(MouseEvent e) {
-        System.out.println("Loooldragged");
-        super.mouseDragged(e);
-      }
-
       @Override
       public void mousePressed(MouseEvent e) {
         super.mousePressed(e);
@@ -245,21 +238,13 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         public void dragEnter(DropTargetDragEvent dtde) {
         }
 
-        private EventInterval correctDates(EventInterval interval, JaretDate curDate) {
-          int secs = interval.getSeconds();
-          interval.setBegin(curDate.copy());
-          interval.setEnd(curDate.copy().advanceSeconds(secs));
-          //return new EventInterval(curDate.copy(), curDate.copy().advanceSeconds(secs), interval.getMedia());
-          return null;
-        }
-
         @Override
         public void dragOver(DropTargetDragEvent dtde) {
           try {
             EventInterval interval = (EventInterval)(dtde.getTransferable().getTransferData(DataFlavor.imageFlavor));
 
             JaretDate curDate = _tbv.dateForXY(dtde.getLocation().x, dtde.getLocation().y);
-            correctDates(interval, curDate);
+            EventInterval ghost = correctDates(interval, curDate);
 
           TimeBarRow overRow = _tbv.getRowForXY(dtde.getLocation().x, dtde.getLocation().y);
           if (overRow != null) {
@@ -268,13 +253,17 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
             // tell the timebar viewer
             ArrayList<Interval> list = new ArrayList<Interval>();
             ArrayList<Integer> listOffset = new ArrayList<Integer>();
-            list.add(interval);
+            list.add(ghost);
             listOffset.add(0);
-            _tbv.setGhostIntervals(list, listOffset);
-            _tbv.setGhostOrigin(dtde.getLocation().x, dtde.getLocation().y);
             // there could be a check whether dropping is allowed at the current location
-            if (true) {// dropAllowed(_draggedJobs, overRow)) {
+            List<Interval> intervals = _tbv.getDelegate().getIntervalsAt(dtde.getLocation().x, dtde.getLocation().y);
+            if (intervals.size() == 0 && _tbv.getRowForXY(dtde.getLocation().x, dtde.getLocation().y) != null) {// dropAllowed(_draggedJobs, overRow)) {
               dtde.acceptDrag(DnDConstants.ACTION_MOVE);
+              _tbv.setGhostIntervals(list, listOffset);
+              _tbv.setGhostOrigin(dtde.getLocation().x, dtde.getLocation().y);
+              /*list.clear();
+              listOffset.clear();*/
+              //_tbv.setGhostIntervals(list, listOffset);
             } else {
               dtde.rejectDrag();
               _tbv.setGhostIntervals(null, null);
@@ -303,21 +292,18 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         public void drop(DropTargetDropEvent dtde) {
           try {
             EventInterval interval = (EventInterval)(dtde.getTransferable().getTransferData(DataFlavor.imageFlavor));
-            System.out.println(interval);
             System.out.println("Dropped!");
             Point p = dtde.getLocation();
-            List<Interval> intervals = _tbv.getDelegate().getIntervalsAt(p.x, p.y);
-            if (intervals.size() > 0) {
-              System.out.println("Can not drop here!");
-            }
-            else
-            {
-              System.out.println("Can drop here!");
-              DefaultTimeBarRowModel timeBarRow = (DefaultTimeBarRowModel)(_tbv.getRowForXY(p.x, p.y));
-              timeBarRow.addInterval(interval);
-              dtde.dropComplete(true);
-              dtde.getDropTargetContext().dropComplete(true);
-            }
+
+            DefaultTimeBarRowModel timeBarRow = (DefaultTimeBarRowModel)(_tbv.getRowForXY(p.x, p.y));
+            JaretDate curDate = _tbv.dateForXY(dtde.getLocation().x, dtde.getLocation().y);
+            timeBarRow.addInterval(correctDates(interval, curDate));
+            beforeDragRow.remInterval(interval);
+            _tbv.setGhostIntervals(null, null);
+            dtde.dropComplete(true);
+            dtde.getDropTargetContext().dropComplete(true);
+            TimelineView.this.emit("timeline:changed", TimelineView.this.getMarkerTime());
+
           } catch (UnsupportedFlavorException e) {
             e.printStackTrace();
           } catch (IOException e) {
@@ -360,6 +346,14 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       });
     }
     return submenu;
+  }
+
+  private EventInterval correctDates(EventInterval interval, JaretDate curDate) {
+    int secs = interval.getSeconds();
+    //interval.setBegin(curDate.copy());
+    //interval.setEnd(curDate.copy().advanceSeconds(secs));
+    return new EventInterval(curDate.copy(), curDate.copy().advanceSeconds(secs), interval.getMedia());
+    //return null;
   }
 
   class RunMarkerAction extends AbstractAction {
@@ -436,15 +430,18 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
             return interval;
           }
         });
+        TimelineView.this.beforeDragRow = (DefaultTimeBarRowModel)_tbv.getRowForXY(e.getDragOrigin().x, e.getDragOrigin().y);
+        TimelineView.this.selected = (EventInterval)interval;
+        //beforeDragRow.remInterval(interval);
         return;
       }
-      Point origin = e.getDragOrigin();
+      /*Point origin = e.getDragOrigin();
       if (_tbv.getDelegate().getYAxisRect().contains(origin)) {
         TimeBarRow row = _tbv.getRowForXY(origin.x, origin.y);
         if (row != null) {
           e.startDrag(null, new StringSelection("Drag ROW " + row));
         }
-      }
+      }*/
 
     }
   }

@@ -45,11 +45,11 @@ public final class PreviewView extends View<PreviewModel, PreviewController> {
 
         imagePanel = new ImagePanel(this.model().image());
 
-        this.on("media:new", this::handle);
-        this.on("marker:changed", this::handleMarker);
-        this.on("filter:applied", this::handleMarker);
-        //this.on("timeline:selection", this::handle);
-    }
+    this.on("media:new", this::handle);
+    this.on("marker:changed", this::handleMarker);
+    this.on("filter:applied", this::handleMarker);
+    this.on("timeline:changed", this::handleMarker);
+  }
 
     private void handle(Media m) {
         imagePanel.setImage(m.getImage(0));
