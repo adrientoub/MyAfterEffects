@@ -215,8 +215,11 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     _tbv.setHideRoot(true);
 
     // add a popup menu for EventIntervals
-
-    /* TODO */
+    Action action = new AbstractAction("IntervalAction") {
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("run " + getValue(NAME));
+      }
+    };
     JPopupMenu menu = new JPopupMenu("Operations");
     JMenu submenu = new JMenu("Filters");
     ArrayList<Filter> filters = new ArrayList<>();
@@ -229,7 +232,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       submenu.getItem(submenu.getItemCount() - 1).addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-
+          //e.
         }
       });
     }
@@ -325,17 +328,18 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
   class RunMarkerAction extends AbstractAction {
     TimeBarViewer _tbv;
     public RunMarkerAction(TimeBarViewer tbv) {
-      super("Run marker");
+      super("Play video");
       _tbv = tbv;
     }
     public void actionPerformed(ActionEvent e) {
-      _tm.setDate(_tbv.getModel().getMinDate().copy());
 
       final Timer timer = new Timer(40, null);
       ActionListener al = new ActionListener() {
 
         public void actionPerformed(ActionEvent e) {
-          _tm.setDate(_tm.getDate().copy().advanceMillis(40));
+          JaretDate deltaDate = _tm.getDate().copy().advanceMillis(40);
+          _tm.setDate(deltaDate);
+          TimelineView.this.emit("marker:changed", deltaDate);
           if (_tm.getDate().compareTo(_tbv.getModel().getMaxDate())>0) {
             timer.stop();
           }
