@@ -170,7 +170,46 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     JPopupMenu menu = new JPopupMenu("Operations");
     JMenu submenu = addFiltersMenu();
 
+    DropTarget d = new DropTarget();
+    try {
+      d.addDropTargetListener(new DropTargetListener() {
+        @Override
+        public void dragEnter(DropTargetDragEvent dtde) {
+
+        }
+
+        @Override
+        public void dragOver(DropTargetDragEvent dtde) {
+
+        }
+
+        @Override
+        public void dropActionChanged(DropTargetDragEvent dtde) {
+
+        }
+
+        @Override
+        public void dragExit(DropTargetEvent dte) {
+
+        }
+
+        @Override
+        public void drop(DropTargetDropEvent dtde) {
+          System.out.println("Dropped!");
+        }
+      });
+    } catch (TooManyListenersException e) {
+      e.printStackTrace();
+    }
+    _tbv.setDropTarget(d);
     _tbv.addMouseListener(new MouseAdapter() {
+
+      @Override
+      public void mouseDragged(MouseEvent e) {
+        System.out.println("Loooldragged");
+        super.mouseDragged(e);
+      }
+
       @Override
       public void mousePressed(MouseEvent e) {
         super.mousePressed(e);
@@ -302,6 +341,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
   }
 
   class TimeBarViewerDragGestureListener implements DragGestureListener {
+
     public void dragGestureRecognized(DragGestureEvent e) {
       Component c = e.getComponent();
       System.out.println("component " + c);
