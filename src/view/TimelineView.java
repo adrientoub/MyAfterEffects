@@ -241,7 +241,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       item.addActionListener(e -> {
         if (selected != null) {
           String filterString = ((JMenuItem)e.getSource()).getText();
-          System.out.println(filterString);
           selected.addFilter(filters.stream().filter(choice -> choice.getClass().getSimpleName().equals(filterString)).findFirst().get());
           TimelineView.this.emit("filter:applied", TimelineView.this.getMarkerTime());
         }
@@ -309,7 +308,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       }
 
       List<Interval> intervals = _tbv.getDelegate().getIntervalsAt(e.getDragOrigin().x, e.getDragOrigin().y);
-      System.out.println("Drag");
       if (intervals.size() > 0) {
         Interval interval = intervals.get(0);
         e.startDrag(null, new Transferable() {
@@ -333,14 +331,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         //beforeDragRow.remInterval(interval);
         return;
       }
-      /*Point origin = e.getDragOrigin();
-      if (_tbv.getDelegate().getYAxisRect().contains(origin)) {
-        TimeBarRow row = _tbv.getRowForXY(origin.x, origin.y);
-        if (row != null) {
-          e.startDrag(null, new StringSelection("Drag ROW " + row));
-        }
-      }*/
-
     }
   }
 }
