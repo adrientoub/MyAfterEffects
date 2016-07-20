@@ -1,6 +1,8 @@
 
 package controller;
 
+import app.MyAfterEffectsApp;
+import de.jaret.util.date.JaretDate;
 import de.jaret.util.misc.Pair;
 import framework.Application;
 import framework.Controller;
@@ -8,6 +10,7 @@ import manager.Media;
 import model.MenuModel;
 import model.TimelineModel;
 import view.MenuView;
+import view.TimelineView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +38,10 @@ public final class MenuController extends Controller<MenuModel, MenuView> {
         ArrayList<Pair<Long, Media>> medias = TimelineModel.getMediasAtDate(TimelineModel.getMarkerTime());
         for (Pair<Long, Media> p : medias)
           System.out.println(p.getLeft() + " " + p.getRight().getName());
+
+        /* To change the marker */
+        MyAfterEffectsApp app = ((MyAfterEffectsApp)this.application());
+        app.getTimelineView().setMarkerTime(new JaretDate(0, 0, 0, 0, 0, 5));
         break;
     }
   }

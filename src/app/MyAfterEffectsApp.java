@@ -1,5 +1,5 @@
 
-
+package app;
 // Swing utilities
 
 import framework.Application;
@@ -16,12 +16,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class MyAfterEffectsApp extends Application {
+
+    private TimelineView timelineView;
+    private TabbedView tabbedView;
+    private PreviewView previewView;
+
     /**
      * Start the {@link MyAfterEffectsApp}.
      *
      * @param frame The main frame of the {@link MyAfterEffectsApp}.
      */
     protected void start(final JFrame frame) {
+        timelineView = new TimelineView(this);
+        tabbedView = new TabbedView(this);
+        previewView = new PreviewView(this);
+
         frame.setTitle("MyAfterEffects");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -33,8 +42,8 @@ public final class MyAfterEffectsApp extends Application {
         // Set the menu bar of the application frame.
         frame.setJMenuBar(new MenuView(this).render());
         JSplitPane jSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        jSplitPane.setBottomComponent(new TimelineView(this).render());
-        JSplitPane topComponent = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new TabbedView(this).render(), new PreviewView(this).render());
+        jSplitPane.setBottomComponent(timelineView.render());
+        JSplitPane topComponent = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabbedView.render(), previewView.render());
         jSplitPane.setTopComponent(topComponent);
         frame.setContentPane(jSplitPane);
     }
@@ -72,5 +81,17 @@ public final class MyAfterEffectsApp extends Application {
      */
     public static void main(final String[] args) {
         new MyAfterEffectsApp();
+    }
+
+    public TimelineView getTimelineView() {
+        return timelineView;
+    }
+
+    public TabbedView getTabbedView() {
+        return tabbedView;
+    }
+
+    public PreviewView getPreviewView() {
+        return previewView;
     }
 }

@@ -66,6 +66,10 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     _tm.setDate(start);
   }
 
+  public void setMarkerTime(JaretDate date) {
+    ((TimeBarMarkerImpl)_tbv.getMarkers().get(0)).setDate(date);
+  }
+
   public JPanel render() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setSize(1400, 600);

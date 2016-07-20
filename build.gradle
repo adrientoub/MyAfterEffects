@@ -5,7 +5,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'idea'
 
-mainClassName = 'MyAfterEffectsApp'
+mainClassName = 'app.MyAfterEffectsApp'
 sourceSets.main.java.srcDirs = ['src']
 
 repositories {
