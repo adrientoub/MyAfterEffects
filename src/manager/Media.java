@@ -4,13 +4,14 @@ import filters.Filter;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Adrien on 19/07/2016.
  */
-public interface Media {
+public interface Media extends Cloneable {
     int getFrameFromMilliseconds(long time);
 
     /**
@@ -49,4 +50,14 @@ public interface Media {
      * @return the name of the Media
      */
     String getName();
+
+    /**
+     * Get the file of the Media
+     * Used sor sequences in timeline
+     * @return the file of the Media
+     */
+    File getFile();
+
+    Object clone();
+
 }

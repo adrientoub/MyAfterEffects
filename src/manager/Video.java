@@ -128,4 +128,19 @@ public class Video implements Media {
     public String getName() {
         return file.getName();
     }
+
+    @Override
+    public File getFile() {
+        return file;
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

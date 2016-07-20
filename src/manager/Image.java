@@ -18,6 +18,7 @@ public class Image implements Media {
     private List<Filter> filters;
     private long duration = 5000;
     private String name;
+    private File file;
 
     public Image(File file) throws IOException {
         image = ImageIO.read(file);
@@ -76,5 +77,20 @@ public class Image implements Media {
     @Override
     public List<Filter> getFilters() {
         return this.filters;
+    }
+
+    @Override
+    public File getFile() {
+        return file;
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

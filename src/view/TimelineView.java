@@ -326,7 +326,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
             System.out.println(lastFrame);
 
             EventInterval newMiddleInterval = new EventInterval(rect.endDate, interval.getEnd(),
-                    new Sequence((Video) interval.getMedia(), firstFrame, lastFrame));
+                    new Sequence((Video)interval.getMedia().clone(), firstFrame, lastFrame));
 
             /* Add new interval to the timeline */
             ((DefaultTimeBarRowModel)rect.startRow).addInterval(newMiddleInterval);
@@ -336,6 +336,19 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
           }
           /* Second : |---[---| ] */
           else if (rect.endDate.diffMilliSeconds(interval.getEnd()) > 0) {
+            firstFrame = interval.getMedia().getFrameFromMilliseconds(rect.startDate.diffMilliSeconds(interval.getBegin()));
+            lastFrame = interval.getMedia().getFrameFromMilliseconds(interval.getEnd().diffMilliSeconds(interval.getBegin()));
+
+            System.out.println(firstFrame);
+            System.out.println(lastFrame);
+
+            EventInterval newMiddleInterval = new EventInterval(rect.startDate, interval.getEnd(),
+                    new Sequence((Video)interval.getMedia().clone(), firstFrame, lastFrame));
+
+            /* Add new interval to the timeline */
+            ((DefaultTimeBarRowModel)rect.startRow).addInterval(newMiddleInterval);
+
+            interval.setEnd(rect.startDate);
             System.out.println("---[--- ]");
           }
           /* Third : |-[----]-| */
@@ -349,7 +362,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
             System.out.println(lastFrame);
 
             EventInterval newMiddleInterval = new EventInterval(rect.startDate, rect.endDate,
-                    new Sequence((Video) interval.getMedia(), firstFrame, lastFrame));
+                    new Sequence((Video)interval.getMedia().clone(), firstFrame, lastFrame));
 
             firstFrame = interval.getMedia().getFrameFromMilliseconds(rect.endDate.diffMilliSeconds(interval.getBegin()));
             lastFrame = interval.getMedia().getFrameFromMilliseconds(interval.getEnd().diffMilliSeconds(interval.getBegin()));
@@ -358,12 +371,9 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
             System.out.println(lastFrame);
 
             EventInterval newEndInterval = new EventInterval(rect.endDate, interval.getEnd(),
-                    new Sequence((Video) interval.getMedia(),
+                    new Sequence((Video)interval.getMedia().clone(),
                             firstFrame,
                             lastFrame));
-
-          /* Create third sequence if needed */
-
 
           /* Add new interval to the timeline */
             ((DefaultTimeBarRowModel) rect.startRow).addInterval(newMiddleInterval);
@@ -394,7 +404,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
     public void dragGestureRecognized(DragGestureEvent e) {
       Component c = e.getComponent();
-      System.out.println("component " + c);
       System.out.println(e.getDragOrigin());
 
       boolean markerDragging = _tbv.getDelegate().isMarkerDraggingInProgress();

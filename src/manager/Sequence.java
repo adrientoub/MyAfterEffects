@@ -4,6 +4,7 @@ import filters.Filter;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +15,11 @@ public class Sequence implements Media {
     private Video video;
     private int startFrame;
     private int endFrame;
-    private List<Filter> filters;
 
     public Sequence(Video video, int startFrame, int endFrame) {
         this.video = video;
         this.startFrame = startFrame;
         this.endFrame = endFrame;
-        this.filters = new ArrayList<>();
     }
 
     @Override
@@ -47,7 +46,7 @@ public class Sequence implements Media {
 
     @Override
     public void addFilter(Filter filter) {
-        filters.add(filter);
+        video.addFilter(filter);
     }
 
     @Override
@@ -62,6 +61,21 @@ public class Sequence implements Media {
 
     @Override
     public List<Filter> getFilters() {
-        return filters;
+        return video.getFilters();
+    }
+
+    @Override
+    public File getFile() {
+        return video.getFile();
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
