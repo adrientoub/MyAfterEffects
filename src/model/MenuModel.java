@@ -37,6 +37,20 @@ public final class MenuModel extends Model {
         }
     }
 
+    public void exportVideo() {
+        JFileChooser jFileChooser = new JFileChooser();
+        jFileChooser.showSaveDialog(null);
+        File selected = jFileChooser.getSelectedFile();
+        if (selected != null) {
+            String path = selected.getAbsolutePath();
+            String extension = getExtension(selected);
+            if (!extension.equals("mp4"))
+                path += ".mp4";
+
+            this.emit("media:export", path);
+        }
+    }
+
     public void exit(int i) {
         System.exit(i);
     }

@@ -3,10 +3,7 @@ package app;
 // Swing utilities
 
 import framework.Application;
-import view.MenuView;
-import view.PreviewView;
-import view.TabbedView;
-import view.TimelineView;
+import view.*;
 
 import javax.swing.*;
 
@@ -16,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class MyAfterEffectsApp extends Application {
-
+    private ExportView exportView;
     private TimelineView timelineView;
     private TabbedView tabbedView;
     private PreviewView previewView;
@@ -30,6 +27,7 @@ public final class MyAfterEffectsApp extends Application {
         timelineView = new TimelineView(this);
         tabbedView = new TabbedView(this);
         previewView = new PreviewView(this);
+        exportView = new ExportView(this);
 
         frame.setTitle("MyAfterEffects");
         try {

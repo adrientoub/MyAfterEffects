@@ -117,6 +117,4 @@ public abstract class Model {
   ) {
     return this.application().radio().off(event, consumer);
   }
-
-
 }

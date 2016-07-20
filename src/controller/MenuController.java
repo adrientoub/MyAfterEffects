@@ -17,32 +17,35 @@ import java.util.ArrayList;
 
 public final class MenuController extends Controller<MenuModel, MenuView> {
 
-  public MenuController(final Application application) {
-    super(application);
-  }
+    public MenuController(final Application application) {
+        super(application);
+    }
 
-  public void handle(String name) {
-    switch (name) {
-      case "Exit":
-        this.model().exit(0);
-        break;
-      case "New":
-        try {
-          this.model().newFile();
-        } catch (IllegalArgumentException | IOException e) {
-          System.err.println(e.getMessage());
-        }
-        break;
-      case "Render":
+    public void handle(String name) {
+        switch (name) {
+            case "Exit":
+                this.model().exit(0);
+                break;
+            case "New":
+                try {
+                    this.model().newFile();
+                } catch (IllegalArgumentException | IOException e) {
+                    System.err.println(e.getMessage());
+                }
+                break;
+            case "Export":
+                this.model().exportVideo();
+                break;
+            case "Render":
         /* TODO Adrien */
-        ArrayList<Pair<Long, Media>> medias = TimelineModel.getMediasAtDate(TimelineModel.getMarkerTime());
-        for (Pair<Long, Media> p : medias)
-          System.out.println(p.getLeft() + " " + p.getRight().getName());
+                ArrayList<Pair<Long, Media>> medias = TimelineModel.getMediasAtDate(TimelineModel.getMarkerTime());
+                for (Pair<Long, Media> p : medias)
+                    System.out.println(p.getLeft() + " " + p.getRight().getName());
 
         /* To change the marker */
-        MyAfterEffectsApp app = ((MyAfterEffectsApp)this.application());
-        app.getTimelineView().setMarkerTime(new JaretDate(0, 0, 0, 0, 0, 5));
-        break;
+                MyAfterEffectsApp app = ((MyAfterEffectsApp) this.application());
+                app.getTimelineView().setMarkerTime(new JaretDate(0, 0, 0, 0, 0, 5));
+                break;
+        }
     }
-  }
 }
