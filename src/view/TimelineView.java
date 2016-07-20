@@ -11,6 +11,10 @@ import de.jaret.util.ui.timebars.model.*;
 import de.jaret.util.ui.timebars.strategy.IIntervalSelectionStrategy;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
 import de.jaret.util.ui.timebars.swing.renderer.DefaultTitleRenderer;
+import filters.Binarize;
+import filters.ChromaKey;
+import filters.Filter;
+import filters.Grayscale;
 import framework.Application;
 import manager.Media;
 import manager.Timeline;
@@ -25,10 +29,7 @@ import javax.swing.Timer;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.dnd.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
@@ -214,14 +215,29 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     _tbv.setHideRoot(true);
 
     // add a popup menu for EventIntervals
-    Action action = new AbstractAction("IntervalAction") {
-      public void actionPerformed(ActionEvent e) {
-        System.out.println("run " + getValue(NAME));
-      }
-    };
-    JPopupMenu pop = new JPopupMenu("Operations");
-    pop.add(action);
-    _tbv.registerPopupMenu(EventInterval.class, pop);
+
+    /* TODO */
+    JPopupMenu menu = new JPopupMenu("Operations");
+    JMenu submenu = new JMenu("Filters");
+    ArrayList<Filter> filters = new ArrayList<>();
+    filters.add(new Binarize());
+    filters.add(new ChromaKey(Color.green));
+    filters.add(new Grayscale());
+
+    for (Filter f : filters) {
+      submenu.add(f.getClass().getName());
+      submenu.getItem(submenu.getItemCount() - 1).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+        }
+      });
+    }
+
+
+    menu.add(submenu);
+
+    _tbv.registerPopupMenu(EventInterval.class, menu);
 
     // add a popup menu for the body
     final Action bodyaction = new AbstractAction("BodyAction") {
@@ -229,11 +245,11 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         System.out.println("run " + getValue(NAME));
       }
     };
-    pop = new JPopupMenu("Operations");
-    pop.add(bodyaction);
-    pop.add(new RunMarkerAction(_tbv));
+    menu = new JPopupMenu("Operations");
+    menu.add(bodyaction);
+    menu.add(new RunMarkerAction(_tbv));
 
-    _tbv.setBodyContextMenu(pop);
+    _tbv.setBodyContextMenu(menu);
 
     // add a popup menu for the hierarchy
     action = new AbstractAction("HierarchyAction") {
@@ -241,9 +257,9 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         System.out.println("run " + getValue(NAME));
       }
     };
-    pop = new JPopupMenu("Operations");
-    pop.add(action);
-    _tbv.setHierarchyContextMenu(pop);
+    menu = new JPopupMenu("Operations");
+    menu.add(action);
+    _tbv.setHierarchyContextMenu(menu);
 
     // add a popup menu for the header
     action = new AbstractAction("HeaderAction") {
@@ -251,9 +267,9 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         System.out.println("run " + getValue(NAME));
       }
     };
-    pop = new JPopupMenu("Operations");
-    pop.add(action);
-    _tbv.setHeaderContextMenu(pop);
+    menu = new JPopupMenu("Operations");
+    menu.add(action);
+    _tbv.setHeaderContextMenu(menu);
 
     // add a popup menu for the time scale
     action = new AbstractAction("TimeScaleAction") {
@@ -261,9 +277,9 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         System.out.println("run " + getValue(NAME));
       }
     };
-    pop = new JPopupMenu("Operations");
-    pop.add(action);
-    _tbv.setTimeScaleContextMenu(pop);
+    menu = new JPopupMenu("Operations");
+    menu.add(action);
+    _tbv.setTimeScaleContextMenu(menu);
 
     // add a popup menu for the title area
     action = new AbstractAction("TitleAction") {
@@ -271,9 +287,9 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         System.out.println("run " + getValue(NAME));
       }
     };
-    pop = new JPopupMenu("Operations");
-    pop.add(action);
-    _tbv.setTitleContextMenu(pop);
+    menu = new JPopupMenu("Operations");
+    menu.add(action);
+    _tbv.setTitleContextMenu(menu);
 
     // add the control panel
     EventMonitoringControlPanel cp = new EventMonitoringControlPanel(_tbv, _tm, 100); // TODO

@@ -11,7 +11,7 @@ public class ChromaKey implements Filter {
     final private int threshold = 3;
     final private int transparentRgba;
 
-    ChromaKey(Color color) {
+    public ChromaKey(Color color) {
         this.color = color;
         Color transparent = new Color(255, 255, 255, 255);
         transparentRgba = transparent.getRGB();
