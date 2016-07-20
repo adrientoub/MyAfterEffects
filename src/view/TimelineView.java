@@ -11,10 +11,7 @@ import de.jaret.util.ui.timebars.model.*;
 import de.jaret.util.ui.timebars.strategy.IIntervalSelectionStrategy;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
 import de.jaret.util.ui.timebars.swing.renderer.DefaultTitleRenderer;
-import filters.Binarize;
-import filters.ChromaKey;
-import filters.Filter;
-import filters.Grayscale;
+import filters.*;
 import framework.Application;
 import manager.Media;
 import manager.Timeline;
@@ -231,10 +228,14 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     hashtable.put("Binarize", new Binarize());
     hashtable.put("ChromaKey", new ChromaKey(Color.green));
     hashtable.put("Grayscale", new Grayscale());
+    hashtable.put("LowPass", new LowPass());
+    hashtable.put("Sepia", new Sepia());
 
     filters.add(new Binarize());
     filters.add(new ChromaKey(Color.green));
     filters.add(new Grayscale());
+    filters.add(new LowPass());
+    filters.add(new Sepia());
 
     for (Filter f : filters) {
       submenu.add(f.getClass().getSimpleName());
