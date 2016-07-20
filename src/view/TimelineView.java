@@ -23,9 +23,13 @@ import timeline.swing.renderer.EventRenderer;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -153,7 +157,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
 
     // do not allow row selections
-    _tbv.getSelectionModel().setRowSelectionAllowed(true);
+    _tbv.getSelectionModel().setRowSelectionAllowed(false);
 
     // register additional renderer
     _tbv.registerTimeBarRenderer(EventInterval.class, new EventRenderer());
@@ -170,38 +174,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     JPopupMenu menu = new JPopupMenu("Operations");
     JMenu submenu = addFiltersMenu();
 
-    DropTarget d = new DropTarget();
-    try {
-      d.addDropTargetListener(new DropTargetListener() {
-        @Override
-        public void dragEnter(DropTargetDragEvent dtde) {
-
-        }
-
-        @Override
-        public void dragOver(DropTargetDragEvent dtde) {
-
-        }
-
-        @Override
-        public void dropActionChanged(DropTargetDragEvent dtde) {
-
-        }
-
-        @Override
-        public void dragExit(DropTargetEvent dte) {
-
-        }
-
-        @Override
-        public void drop(DropTargetDropEvent dtde) {
-          System.out.println("Dropped!");
-        }
-      });
-    } catch (TooManyListenersException e) {
-      e.printStackTrace();
-    }
-    _tbv.setDropTarget(d);
     _tbv.addMouseListener(new MouseAdapter() {
 
       @Override
@@ -264,7 +236,99 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     DragSource dragSource = DragSource.getDefaultDragSource();
     DragGestureListener dgl = new TimeBarViewerDragGestureListener();
     DragGestureRecognizer dgr = dragSource.createDefaultDragGestureRecognizer(_tbv._diagram,
-            DnDConstants.ACTION_COPY, dgl);
+            DnDConstants.ACTION_MOVE, dgl);
+
+    DropTarget d = new DropTarget();
+    try {
+      d.addDropTargetListener(new DropTargetListener() {
+        @Override
+        public void dragEnter(DropTargetDragEvent dtde) {
+        }
+
+        private EventInterval correctDates(EventInterval interval, JaretDate curDate) {
+          int secs = interval.getSeconds();
+          interval.setBegin(curDate.copy());
+          interval.setEnd(curDate.copy().advanceSeconds(secs));
+          //return new EventInterval(curDate.copy(), curDate.copy().advanceSeconds(secs), interval.getMedia());
+          return null;
+        }
+
+        @Override
+        public void dragOver(DropTargetDragEvent dtde) {
+          try {
+            EventInterval interval = (EventInterval)(dtde.getTransferable().getTransferData(DataFlavor.imageFlavor));
+
+            JaretDate curDate = _tbv.dateForXY(dtde.getLocation().x, dtde.getLocation().y);
+            correctDates(interval, curDate);
+
+          TimeBarRow overRow = _tbv.getRowForXY(dtde.getLocation().x, dtde.getLocation().y);
+          if (overRow != null) {
+            _tbv.highlightRow(overRow);
+
+            // tell the timebar viewer
+            ArrayList<Interval> list = new ArrayList<Interval>();
+            ArrayList<Integer> listOffset = new ArrayList<Integer>();
+            list.add(interval);
+            listOffset.add(0);
+            _tbv.setGhostIntervals(list, listOffset);
+            _tbv.setGhostOrigin(dtde.getLocation().x, dtde.getLocation().y);
+            // there could be a check whether dropping is allowed at the current location
+            if (true) {// dropAllowed(_draggedJobs, overRow)) {
+              dtde.acceptDrag(DnDConstants.ACTION_MOVE);
+            } else {
+              dtde.rejectDrag();
+              _tbv.setGhostIntervals(null, null);
+            }
+          } else {
+            _tbv.deHighlightRow();
+          }
+          } catch (UnsupportedFlavorException e) {
+            e.printStackTrace();
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+
+        @Override
+        public void dropActionChanged(DropTargetDragEvent dtde) {
+
+        }
+
+        @Override
+        public void dragExit(DropTargetEvent dte) {
+          _tbv.deHighlightRow();
+        }
+
+        @Override
+        public void drop(DropTargetDropEvent dtde) {
+          try {
+            EventInterval interval = (EventInterval)(dtde.getTransferable().getTransferData(DataFlavor.imageFlavor));
+            System.out.println(interval);
+            System.out.println("Dropped!");
+            Point p = dtde.getLocation();
+            List<Interval> intervals = _tbv.getDelegate().getIntervalsAt(p.x, p.y);
+            if (intervals.size() > 0) {
+              System.out.println("Can not drop here!");
+            }
+            else
+            {
+              System.out.println("Can drop here!");
+              DefaultTimeBarRowModel timeBarRow = (DefaultTimeBarRowModel)(_tbv.getRowForXY(p.x, p.y));
+              timeBarRow.addInterval(interval);
+              dtde.dropComplete(true);
+              dtde.getDropTargetContext().dropComplete(true);
+            }
+          } catch (UnsupportedFlavorException e) {
+            e.printStackTrace();
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      });
+    } catch (TooManyListenersException e) {
+      e.printStackTrace();
+    }
+    _tbv.setDropTarget(d);
 
 
     // add the control panel
@@ -356,7 +420,22 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       System.out.println("Drag");
       if (intervals.size() > 0) {
         Interval interval = intervals.get(0);
-        e.startDrag(null, new StringSelection("Drag " + ((EventInterval) interval).getTitle()));
+        e.startDrag(null, new Transferable() {
+          @Override
+          public DataFlavor[] getTransferDataFlavors() {
+            return new DataFlavor[0];
+          }
+
+          @Override
+          public boolean isDataFlavorSupported(DataFlavor flavor) {
+            return false;
+          }
+
+          @Override
+          public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+            return interval;
+          }
+        });
         return;
       }
       Point origin = e.getDragOrigin();
