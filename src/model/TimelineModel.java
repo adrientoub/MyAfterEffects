@@ -12,6 +12,7 @@ import framework.Application;
 import framework.Model;
 import manager.Media;
 import manager.Timeline;
+import timeline.model.EventInterval;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,10 +32,6 @@ public final class TimelineModel extends Model {
     this.on("media:new", this::add);
   }
 
-  public static Timeline[] timelines() {
-    return timelines.toArray(new Timeline[timelines.size()]);
-  }
-
   public static ArrayList<Pair<Long, Media>> getMediasAtDate(JaretDate date) {
     ArrayList<Pair<Long, Media>> pairs = new ArrayList<>();
     TimeBarModel model = getTbv().getModel();
@@ -45,24 +42,12 @@ public final class TimelineModel extends Model {
 
       /* If that video is present on that date, add it to the list */
       if (!intervals.isEmpty()) {
-        Interval i = intervals.get(0);
-        Media m = timelines()[r].getMedia();
+        EventInterval i = (EventInterval)intervals.get(0);
+        Media m = i.getMedia();
         pairs.add(new Pair<>(date.diffMilliSeconds(i.getBegin()), m));
       }
     }
     return pairs;
-  }
-
-  private static void forEachInterval(TimeBarModel model, Consumer<Interval> consumer) {
-    for (int r = 0; r < model.getRowCount(); r++) {
-      TimeBarRow row = model.getRow(r);
-      Iterator it = row.getIntervals().iterator();
-      while (it.hasNext()) {
-
-        Interval interval = (Interval) it.next();
-        consumer.accept(interval);
-      }
-    }
   }
 
   public void add(Media media) {

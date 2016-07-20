@@ -39,6 +39,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
   TimeBarMarkerImpl _tm;
   TimeBarModel flatModel;
   private boolean stopped = true;
+  EventInterval selected = null;
 
   public TimelineView(final Application application) {
     super(application);
@@ -56,7 +57,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     DefaultRowHeader header = new DefaultRowHeader(media.getName());
     EventTimeBarRow row = new EventTimeBarRow(header);
 
-    EventInterval interval = new EventInterval(start.copy(), start.copy().advanceMillis(media.getDuration()));
+    EventInterval interval = new EventInterval(start.copy(), start.copy().advanceMillis(media.getDuration()), media);
     interval.setTitle(media.getName());
     row.addInterval(interval);
 
@@ -215,6 +216,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     // do not show the root node
     _tbv.setHideRoot(true);
 
+    /* TODO CLEAN DIRTY CODE */
     // add a popup menu for EventIntervals
     Action action = new AbstractAction("IntervalAction") {
       public void actionPerformed(ActionEvent e) {
@@ -223,22 +225,42 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     };
     JPopupMenu menu = new JPopupMenu("Operations");
     JMenu submenu = new JMenu("Filters");
+
+    HashMap<String, Filter> hashtable = new HashMap<>();
     ArrayList<Filter> filters = new ArrayList<>();
+    hashtable.put("Binarize", new Binarize());
+    hashtable.put("ChromaKey", new ChromaKey(Color.green));
+    hashtable.put("Grayscale", new Grayscale());
+
     filters.add(new Binarize());
     filters.add(new ChromaKey(Color.green));
     filters.add(new Grayscale());
 
     for (Filter f : filters) {
-      submenu.add(f.getClass().getName());
-      submenu.getItem(submenu.getItemCount() - 1).addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          //e.
+      submenu.add(f.getClass().getSimpleName());
+
+      JMenuItem item = submenu.getItem(submenu.getItemCount() - 1);
+      item.addActionListener(e -> {
+        if (selected != null) {
+          String filterString = ((JMenuItem)e.getSource()).getText();
+          System.out.println(filterString);
+          selected.addFilter(hashtable.get(filterString));
         }
       });
     }
 
 
+    _tbv.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mousePressed(MouseEvent e) {
+        super.mousePressed(e);
+        List<Interval> intervals = _tbv.getDelegate().getIntervalsAt(e.getX(), e.getY());
+        if (intervals.size() > 0)
+           selected = (EventInterval) intervals.get(0);
+        else
+          selected = null;
+      }
+    });
     menu.add(submenu);
 
     _tbv.registerPopupMenu(EventInterval.class, menu);
@@ -296,12 +318,20 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     menu.add(action);
     _tbv.setTitleContextMenu(menu);
 
+    // add dnd support
+    DragSource dragSource = DragSource.getDefaultDragSource();
+    DragGestureListener dgl = new TimeBarViewerDragGestureListener();
+    DragGestureRecognizer dgr = dragSource.createDefaultDragGestureRecognizer(_tbv._diagram,
+            DnDConstants.ACTION_COPY, dgl);
+
+
     // add the control panel
     EventMonitoringControlPanel cp = new EventMonitoringControlPanel(_tbv, _tm, 100); // TODO
     panel.add(cp, BorderLayout.SOUTH);
 
     // go!
     panel.setVisible(true);
+    //panel.add
     new Thread() {
       @Override
       public void run() {
@@ -381,6 +411,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       }
 
       List<Interval> intervals = _tbv.getDelegate().getIntervalsAt(e.getDragOrigin().x, e.getDragOrigin().y);
+      System.out.println("Drag");
       if (intervals.size() > 0) {
         Interval interval = intervals.get(0);
         e.startDrag(null, new StringSelection("Drag " + ((EventInterval) interval).getTitle()));
@@ -394,27 +425,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
         }
       }
 
-    }
-  }
-
-  private static void startChanging(TimeBarModel model) {
-    long delay = 3000;
-    for (int r = 0; r < model.getRowCount(); r++) {
-      TimeBarRow row = model.getRow(r);
-      Iterator it = row.getIntervals().iterator();
-      while (it.hasNext()) {
-        Interval interval = (Interval) it.next();
-        double minutes = interval.getEnd().diffMinutes(interval.getBegin());
-        JaretDate date = interval.getEnd().copy();
-        date.backMinutes(minutes / 4);
-        interval.setEnd(date);
-        System.out.println("Changed interval " + interval);
-        try {
-          Thread.sleep(delay / 2);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
     }
   }
 }

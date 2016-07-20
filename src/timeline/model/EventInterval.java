@@ -22,6 +22,7 @@ package timeline.model;
 import de.jaret.util.date.IntervalImpl;
 import de.jaret.util.date.JaretDate;
 import filters.Filter;
+import manager.Media;
 
 import java.util.ArrayList;
 
@@ -33,10 +34,11 @@ import java.util.ArrayList;
  */
 public class EventInterval extends IntervalImpl {
     private String _title;
-    private ArrayList<Filter> filters;
+    private Media media;
 
-    public EventInterval(JaretDate from, JaretDate to) {
+    public EventInterval(JaretDate from, JaretDate to, Media m) {
         super(from, to);
+        this.media = m;
     }
 
     public String getTitle() {
@@ -53,12 +55,17 @@ public class EventInterval extends IntervalImpl {
     }
 
     public ArrayList<Filter> getFilters() {
-        return filters;
+        /* TODO */
+        return null;
     }
 
     public void addFilter(Filter filter) {
         if (filter == null)
             throw new NullPointerException("Tried to add null filter to an Interval");
-        this.filters.add(filter);
+        this.media.addFilter(filter);
+    }
+
+    public Media getMedia() {
+        return media;
     }
 }
