@@ -5,6 +5,7 @@ import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
@@ -23,6 +24,7 @@ public class Video implements Media {
     private long duration;
     private VideoCapture videoCapture;
     private File file;
+    private Dimension resolution;
 
     private static BufferedImage Mat2bufferedImage(Mat image) {
         int bufferSize = image.channels() * image.cols() * image.rows();
@@ -43,6 +45,7 @@ public class Video implements Media {
         fps = videoCapture.get(CAP_PROP_FPS);
         double frameCount = videoCapture.get(CAP_PROP_FRAME_COUNT);
         nbFrames = (int)frameCount;
+        resolution = new Dimension((int) width, (int) height);
 
         System.out.println("Width: " + width);
         System.out.println("Height: " + height);
@@ -52,6 +55,16 @@ public class Video implements Media {
             duration = (long) (frameCount * 1000.0 / fps);
         else
             duration = nbFrames * 1000;
+    }
+
+    @Override
+    public int getFrameFromMilliseconds(long time) {
+        return (int) ((time / 1000.0) * fps);
+    }
+
+    @Override
+    public Dimension getResolution() {
+        return resolution;
     }
 
     public BufferedImage getImage(int frameNb) {

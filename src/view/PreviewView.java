@@ -16,6 +16,7 @@ import model.PreviewModel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import static model.TimelineModel.getMediasAtDate;
@@ -55,7 +56,20 @@ public final class PreviewView extends View<PreviewModel, PreviewController> {
 
     private void handleMarker(JaretDate markerDate) {
       ArrayList<Pair<Long, Media>> pairs = getMediasAtDate(markerDate);
-      /* TODO FIXME */
+      if (pairs.size() == 0) {
+        return;
+      }
+      Dimension resolution = pairs.get(0).getRight().getResolution();
+      BufferedImage bi = new BufferedImage((int) resolution.getWidth(), (int) resolution.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+      Graphics graphics = bi.getGraphics();
+      for (Pair<Long, Media> pair: pairs) {
+        Media m = pair.getRight();
+        long time = pair.getLeft();
+        BufferedImage image = m.getImage(m.getFrameFromMilliseconds(time));
+        graphics.drawImage(image, 0, 0, null);
+      }
+
+      imagePanel.setImage(bi);
     }
 
   /**

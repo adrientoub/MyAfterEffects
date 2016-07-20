@@ -2,6 +2,7 @@ package manager;
 
 import filters.Filter;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -18,6 +19,16 @@ public class Sequence implements Media {
         this.video = video;
         this.startFrame = startFrame;
         this.endFrame = endFrame;
+    }
+
+    @Override
+    public int getFrameFromMilliseconds(long time) {
+        return video.getFrameFromMilliseconds(time);
+    }
+
+    @Override
+    public Dimension getResolution() {
+        return video.getResolution();
     }
 
     @Override

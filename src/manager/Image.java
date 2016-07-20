@@ -3,6 +3,7 @@ package manager;
 import filters.Filter;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +37,16 @@ public class Image implements Media {
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), buffer, 0, image.getWidth());
         copy.setRGB(0, 0, image.getWidth(), image.getHeight(), buffer, 0, image.getWidth());
         return copy;
+    }
+
+    @Override
+    public int getFrameFromMilliseconds(long time) {
+        return 0;
+    }
+
+    @Override
+    public Dimension getResolution() {
+        return new Dimension(image.getWidth(), image.getHeight());
     }
 
     @Override

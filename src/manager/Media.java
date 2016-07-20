@@ -2,12 +2,21 @@ package manager;
 
 import filters.Filter;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
  * Created by Adrien on 19/07/2016.
  */
 public interface Media {
+    int getFrameFromMilliseconds(long time);
+
+    /**
+     * Returns the media resolution
+     * @return The resolution in pixel
+     */
+    Dimension getResolution();
+
     /**
      * Returns the image at the selected frame.
      * @param frameNb The frame number
