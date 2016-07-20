@@ -30,7 +30,7 @@ public abstract class Application {
     frame.setVisible(true);
   }
 
-  final Radio radio() {
+  public final Radio radio() {
     return this.radio;
   }
 

@@ -17,7 +17,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package timeline.swing;
+package timeline;
 
 import de.jaret.util.ui.timebars.TimeBarMarkerImpl;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
@@ -41,7 +41,6 @@ import java.awt.event.ActionListener;
 public class EventMonitoringControlPanel extends JPanel {
     TimeBarViewer _viewer;
     JSlider _timeScaleSlider;
-    JSlider _rowHeigthSlider;
     TimeBarMarkerImpl _marker;
 
     public EventMonitoringControlPanel(TimeBarViewer viewer, TimeBarMarkerImpl marker, int initalSecondsDisplayed) {
@@ -52,9 +51,6 @@ public class EventMonitoringControlPanel extends JPanel {
         createControls(initalSecondsDisplayed);
     }
 
-    /**
-     * 
-     */
     private void createControls(int initialSeconds) {
         final double slidermax = 50; // slider maximum (does not really matter)
 

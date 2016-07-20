@@ -4,12 +4,13 @@ import filters.Filter;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Adrien on 20/07/2016.
  */
-/*public class Sequence implements Media {
+public class Sequence implements Media {
     private Video video;
     private int startFrame;
     private int endFrame;
@@ -19,6 +20,7 @@ import java.util.List;
         this.video = video;
         this.startFrame = startFrame;
         this.endFrame = endFrame;
+        this.filters = new ArrayList<>();
     }
 
     @Override
@@ -53,4 +55,9 @@ import java.util.List;
     public String getName() {
         return video.getName();
     }
-}*/
+
+    @Override
+    public List<Filter> getFilters() {
+        return filters;
+    }
+}
