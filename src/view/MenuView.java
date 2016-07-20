@@ -5,12 +5,11 @@ package view;
 import java.awt.Toolkit;
 
 // AWT events
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 // Swing utilities
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import javax.swing.*;
 
 // Framework
 import controller.MenuController;
@@ -29,6 +28,13 @@ public final class MenuView extends View<MenuModel, MenuController> {
   private JMenuItem createItem(String name) {
     JMenuItem jMenuItem = new JMenuItem(name);
     jMenuItem.addActionListener(e -> this.controller().handle(name));
+
+    char c;
+    if (name.equals("Exit"))
+      c = 'X';
+    else
+      c = name.charAt(0);
+    jMenuItem.setAccelerator(KeyStroke.getKeyStroke(c, ActionEvent.CTRL_MASK));
     return jMenuItem;
   }
 

@@ -49,6 +49,7 @@ public final class TimelineModel extends Model {
     for (int r = 0; r < model.getRowCount(); r++) {
       TimeBarRow row = model.getRow(r);
       ArrayList<Interval> intervals = (ArrayList<Interval>)row.getIntervals(date);
+      System.out.println("Intervals: " + intervals.size());
 
       /* If that video is present on that date, add it to the list */
       if (!intervals.isEmpty()) {

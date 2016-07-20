@@ -1,6 +1,7 @@
 package manager;
 
 import filters.Filter;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 
@@ -26,7 +27,14 @@ public class Video implements Media {
     private File file;
     private Dimension resolution;
 
-    private static BufferedImage Mat2bufferedImage(Mat image) {
+    public static Mat bufferedImageToMat(BufferedImage bi) {
+        Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CvType.CV_8UC3);
+        byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
+        mat.put(0, 0, data);
+        return mat;
+    }
+
+    public static BufferedImage Mat2bufferedImage(Mat image) {
         int bufferSize = image.channels() * image.cols() * image.rows();
         byte [] bytes = new byte[bufferSize];
         image.get(0, 0, bytes);

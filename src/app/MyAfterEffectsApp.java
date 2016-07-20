@@ -66,6 +66,7 @@ public final class MyAfterEffectsApp extends Application {
         ArrayList<File> files = new ArrayList<>();
         files.addAll(listEndsWith("lib" + separator + "opencv", lib_ext));
         files.addAll(listEndsWith("lib" + separator + "ffmpeg", lib_ext));
+        files.addAll(listEndsWith("lib" + separator + "h264", lib_ext));
         for (File f : files) {
             System.out.println("Loading external library: " + f.getAbsolutePath());
             System.load(f.getAbsolutePath());

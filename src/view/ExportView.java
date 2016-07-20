@@ -36,6 +36,7 @@ public final class ExportView extends View<ExportModel, ExportController> {
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         // TODO: add video frame count as max
+        max = 100;
         JPanel progressLine = new JPanel();
         progressLine.setLayout(new BoxLayout(progressLine, BoxLayout.X_AXIS));
         jProgressBar = new JProgressBar();
@@ -51,7 +52,7 @@ public final class ExportView extends View<ExportModel, ExportController> {
         view.setContentPane(content);
         view.pack();
         view.setVisible(true);
-        this.model().process();
+        this.model().process(path);
     }
 
     private void setProgress(int progress) {
