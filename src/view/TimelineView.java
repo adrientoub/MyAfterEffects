@@ -6,6 +6,7 @@ import de.jaret.util.date.Interval;
 import de.jaret.util.date.JaretDate;
 import de.jaret.util.ui.timebars.TimeBarMarker;
 import de.jaret.util.ui.timebars.TimeBarMarkerImpl;
+import de.jaret.util.ui.timebars.TimeBarViewerDelegate;
 import de.jaret.util.ui.timebars.model.*;
 import de.jaret.util.ui.timebars.strategy.IIntervalSelectionStrategy;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
@@ -13,8 +14,10 @@ import de.jaret.util.ui.timebars.swing.renderer.DefaultTitleRenderer;
 import filters.*;
 import framework.Application;
 import manager.Media;
+import manager.Sequence;
 import manager.Timeline;
 import framework.View;
+import manager.Video;
 import model.TimelineModel;
 import timeline.EventInterval;
 import timeline.EventMonitoringControlPanel;
@@ -25,6 +28,7 @@ import timeline.handler.DropListener;
 
 import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -172,6 +176,8 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     menu = new JPopupMenu("Operations");
     menu.add(new RunMarkerAction(_tbv));
     menu.add(new PauseMarkerAction(_tbv));
+    menu.add(new createSequenceAction(_tbv));
+    menu.add(new cleanRectAction(_tbv));
     _tbv.setBodyContextMenu(menu);
 
     // add a popup menu for the header
@@ -295,6 +301,50 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     }
   }
 
+  class createSequenceAction extends AbstractAction {
+    public createSequenceAction(TimeBarViewer tbv) {
+      super("Create sequence");
+      _tbv = tbv;
+    }
+
+    public void actionPerformed(ActionEvent event) {
+      TBRect rect = _tbv.getRegionRect();
+      if (rect != null) {
+        /* Should only contains at most one */
+        ArrayList<Interval> intervals = (ArrayList<Interval>) rect.startRow.getIntervals(rect.startDate, rect.endDate);
+        if (intervals.stream().findFirst().isPresent()) {
+          EventInterval interval = (EventInterval)intervals.stream().findFirst().get();
+
+          /* Will be messy if rectangle is before start of video */
+          int firstFrame = interval.getMedia().getFrameFromMilliseconds(rect.startDate.diffMilliSeconds(interval.getBegin()));
+          int lastFrame = interval.getMedia().getFrameFromMilliseconds(rect.endDate.diffMilliSeconds(interval.getBegin()));
+
+          System.out.println(firstFrame);
+          System.out.println(lastFrame);
+
+          EventInterval newInterval = new EventInterval(rect.startDate, interval.getEnd(),
+                  new Sequence((Video)interval.getMedia(), firstFrame, lastFrame));
+
+          /* Add new interval to the timeline */
+          ((DefaultTimeBarRowModel)rect.startRow).addInterval(newInterval);
+
+          /* Split the interval */
+          interval.setEnd(rect.startDate);
+        }
+      }
+    }
+  }
+
+  class cleanRectAction extends AbstractAction {
+    public cleanRectAction(TimeBarViewer tbv) {
+      super("Clean rectangle selection");
+      _tbv = tbv;
+    }
+    public void actionPerformed(ActionEvent event) {
+      _tbv.clearRegionRect();
+    }
+  }
+
   class TimeBarViewerDragGestureListener implements DragGestureListener {
 
     public void dragGestureRecognized(DragGestureEvent e) {
@@ -306,6 +356,9 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       if (markerDragging) {
         return;
       }
+
+      if(_tbv.getDelegate().getRegionRect() != null)
+        return;
 
       List<Interval> intervals = _tbv.getDelegate().getIntervalsAt(e.getDragOrigin().x, e.getDragOrigin().y);
       if (intervals.size() > 0) {

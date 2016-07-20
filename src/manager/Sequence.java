@@ -35,8 +35,12 @@ public class Sequence implements Media {
 
     @Override
     public BufferedImage getImage(int frameNb) {
-        if (frameNb < endFrame - startFrame) {
+        /* Sequence is from 69 to 305, ask for 374, WTF */
+        /*if (frameNb < endFrame - startFrame) {
             return video.getImage(startFrame + endFrame);
+        }*/
+        if (frameNb < endFrame - startFrame) {
+            return video.getImage(startFrame + frameNb);
         }
         return null;
     }
