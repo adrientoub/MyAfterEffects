@@ -6,6 +6,7 @@ import controller.ExportController;
 import framework.Application;
 import framework.View;
 import model.ExportModel;
+import process.ProcessThreaded;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -19,6 +20,7 @@ public final class ExportView extends View<ExportModel, ExportController> {
     private JProgressBar jProgressBar;
     private int max;
     private JLabel progress;
+    private JPanel content;
 
     public ExportView(final Application application) {
         super(application);
@@ -33,7 +35,7 @@ public final class ExportView extends View<ExportModel, ExportController> {
     private void handle(String path) {
         System.out.println("Handling " + path);
         view = new JFrame("Export");
-        JPanel content = new JPanel();
+        content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         // TODO: add video frame count as max
         max = 100;
@@ -52,13 +54,13 @@ public final class ExportView extends View<ExportModel, ExportController> {
         view.setContentPane(content);
         view.pack();
         view.setVisible(true);
-        this.model().process(path);
+        new ProcessThreaded(model(), path).start();
     }
 
     private void setProgress(int progress) {
         this.progress.setText(((double) progress / max) * 100 + " %");
         jProgressBar.setValue(progress);
-        view.repaint();
+        content.repaint();
     }
 
     /**

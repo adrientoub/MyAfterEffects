@@ -27,10 +27,28 @@ public class Video implements Media {
     private File file;
     private Dimension resolution;
 
+    private static BufferedImage toBufferedImageOfType(BufferedImage original, int type) {
+        if (original.getType() == type) {
+            return original;
+        }
+
+        BufferedImage image = new BufferedImage(original.getWidth(), original.getHeight(), type);
+
+        Graphics2D g = image.createGraphics();
+        try {
+            g.setComposite(AlphaComposite.Src);
+            g.drawImage(original, 0, 0, null);
+        }
+        finally {
+            g.dispose();
+        }
+        return image;
+    }
+
     public static Mat bufferedImageToMat(BufferedImage bi) {
-        int cvType = bi.getType() == BufferedImage.TYPE_3BYTE_BGR ? CvType.CV_8UC3: CvType.CV_8UC4;
-        Mat mat = new Mat(bi.getHeight(), bi.getWidth(), cvType);
-        byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
+        BufferedImage image = toBufferedImageOfType(bi, BufferedImage.TYPE_3BYTE_BGR);
+        Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
+        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         mat.put(0, 0, data);
         return mat;
     }
@@ -39,7 +57,8 @@ public class Video implements Media {
         int bufferSize = image.channels() * image.cols() * image.rows();
         byte[] bytes = new byte[bufferSize];
         image.get(0, 0, bytes);
-        BufferedImage img = new BufferedImage(image.width(), image.height(), BufferedImage.TYPE_3BYTE_BGR);
+        int type = image.channels() == 3 ? BufferedImage.TYPE_3BYTE_BGR: BufferedImage.TYPE_4BYTE_ABGR;
+        BufferedImage img = new BufferedImage(image.width(), image.height(), type);
         final byte[] targetPixels = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
         System.arraycopy(bytes, 0, targetPixels, 0, bytes.length);
         return img;
