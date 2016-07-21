@@ -19,6 +19,7 @@
  */
 package timeline;
 
+import de.jaret.util.date.JaretDate;
 import de.jaret.util.ui.timebars.TimeBarMarkerImpl;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
 import de.jaret.util.ui.timebars.swing.renderer.BoxTimeScaleRenderer;
@@ -52,7 +53,7 @@ public class EventMonitoringControlPanel extends JPanel {
     }
 
     private void createControls(int initialSeconds) {
-        final double slidermax = 50; // slider maximum (does not really matter)
+        final double slidermax = 100; // slider maximum (does not really matter)
 
         _timeScaleSlider = new JSlider(0, (int) slidermax);
 
@@ -66,7 +67,7 @@ public class EventMonitoringControlPanel extends JPanel {
 
         _timeScaleSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                _viewer.setSecondsDisplayed(_timeScaleSlider.getValue(), true);
+                _viewer.setSecondsDisplayed(_timeScaleSlider.getValue() * 4, false);
             }
         });
 
@@ -77,7 +78,9 @@ public class EventMonitoringControlPanel extends JPanel {
             ((DefaultGridRenderer) _viewer.getGridRenderer()).setTickProvider(btscr);
         }
 
-        _viewer.setSecondsDisplayed(20, true);
+        _viewer.setStartDate(new JaretDate(0, 0, 0, 0, 0, 0));
+        _viewer.setSecondsDisplayed(_timeScaleSlider.getValue() * 4, false);
+        _viewer.setMaxDate(new JaretDate(0, 0, 0, 0, (int)slidermax * 4, 0));
 
         _viewer.getRegionRectEnable();
     }

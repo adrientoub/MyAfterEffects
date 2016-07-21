@@ -75,9 +75,6 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
 
     ((DefaultTimeBarModel)flatModel).addRow(row);
     _tbv.setModel(flatModel);
-    _tbv.setHierarchyWidth(0);
-    _tbv.setTimeScalePosition(TimeBarViewer.TIMESCALE_POSITION_TOP);
-    _tbv.setYAxisWidth(100);
     _tm.setDate(start);
   }
 
