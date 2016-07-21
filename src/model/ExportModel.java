@@ -19,8 +19,6 @@ import java.util.concurrent.*;
 
 
 public final class ExportModel extends Model {
-    BufferedImage image;
-
     public ExportModel(final Application application) {
         super(application);
     }
@@ -40,7 +38,7 @@ public final class ExportModel extends Model {
             frames.add(future);
         }
         // Set correct size
-        final int fourCC = VideoWriter.fourcc('X', 'V', 'I', 'D');
+        final int fourCC = VideoWriter.fourcc('M', 'J', 'P', 'G');
         VideoWriter videoWriter = new VideoWriter(path, fourCC, 30, new Size(1280, 720), true);
         if (videoWriter.isOpened()) {
             System.out.println("Opened");
@@ -48,7 +46,8 @@ public final class ExportModel extends Model {
             System.out.println("Closed");
         }
 
-        for (int i = 0; i < frames.size(); i++) {
+        System.out.println(frames.size());
+        for (int i = 0; frames.size() != 0; i++) {
             Future<BufferedImage> future = frames.poll();
             try {
                 BufferedImage bi = future.get();
@@ -64,6 +63,8 @@ public final class ExportModel extends Model {
                 e.printStackTrace();
             }
         }
-        //videoWriter.release();
+        this.emit("media:exportProgress", max);
+        videoWriter.release();
+        System.out.println("Released");
     }
 }

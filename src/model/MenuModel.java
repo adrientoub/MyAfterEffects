@@ -42,10 +42,11 @@ public final class MenuModel extends Model {
         jFileChooser.showSaveDialog(null);
         File selected = jFileChooser.getSelectedFile();
         if (selected != null) {
+            final String videoExtension = "avi";
             String path = selected.getAbsolutePath();
             String extension = getExtension(selected);
-            if (!extension.equals("mp4"))
-                path += ".mp4";
+            if (!extension.equals(videoExtension))
+                path += "." + videoExtension;
 
             this.emit("media:export", path);
         }

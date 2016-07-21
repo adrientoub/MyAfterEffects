@@ -28,7 +28,8 @@ public class Video implements Media {
     private Dimension resolution;
 
     public static Mat bufferedImageToMat(BufferedImage bi) {
-        Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CvType.CV_8UC3);
+        int cvType = bi.getType() == BufferedImage.TYPE_3BYTE_BGR ? CvType.CV_8UC3: CvType.CV_8UC4;
+        Mat mat = new Mat(bi.getHeight(), bi.getWidth(), cvType);
         byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
         mat.put(0, 0, data);
         return mat;

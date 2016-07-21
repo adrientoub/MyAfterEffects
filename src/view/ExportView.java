@@ -58,6 +58,7 @@ public final class ExportView extends View<ExportModel, ExportController> {
     private void setProgress(int progress) {
         this.progress.setText(((double) progress / max) * 100 + " %");
         jProgressBar.setValue(progress);
+        view.repaint();
     }
 
     /**
