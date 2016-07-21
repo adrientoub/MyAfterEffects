@@ -54,7 +54,7 @@ public class EventMonitoringControlPanel extends JPanel {
 
     private void createControls(int initialSeconds) {
         final double slidermax = 100; // slider maximum (does not really matter)
-
+        final float factor = 1.1f;
         _timeScaleSlider = new JSlider(0, (int) slidermax);
 
         _timeScaleSlider.setPreferredSize(new Dimension(_timeScaleSlider.getPreferredSize().width * 4, _timeScaleSlider
@@ -67,7 +67,7 @@ public class EventMonitoringControlPanel extends JPanel {
 
         _timeScaleSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                _viewer.setSecondsDisplayed(_timeScaleSlider.getValue() * 4, false);
+                _viewer.setSecondsDisplayed((int)Math.round(Math.pow(factor, _timeScaleSlider.getValue())), false);
             }
         });
 
@@ -79,8 +79,8 @@ public class EventMonitoringControlPanel extends JPanel {
         }
 
         _viewer.setStartDate(new JaretDate(0, 0, 0, 0, 0, 0));
-        _viewer.setSecondsDisplayed(_timeScaleSlider.getValue() * 4, false);
-        _viewer.setMaxDate(new JaretDate(0, 0, 0, 0, (int)slidermax * 4, 0));
+        _viewer.setSecondsDisplayed((int)Math.round(Math.pow(factor, _timeScaleSlider.getValue())), false);
+        _viewer.setMaxDate(new JaretDate(0, 0, 0, 0, (int)(slidermax * factor), 0));
 
         _viewer.getRegionRectEnable();
     }
