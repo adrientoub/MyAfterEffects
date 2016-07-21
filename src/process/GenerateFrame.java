@@ -28,7 +28,7 @@ public class GenerateFrame implements Callable<BufferedImage> {
             return null;
         }
         Dimension resolution = pairs.get(0).getRight().getResolution();
-        BufferedImage bi = new BufferedImage((int) resolution.getWidth(), (int) resolution.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+        BufferedImage bi = new BufferedImage((int) resolution.getWidth(), (int) resolution.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         Graphics graphics = bi.getGraphics();
         for (Pair<Long, Media> pair: pairs) {
             Media m = pair.getRight();

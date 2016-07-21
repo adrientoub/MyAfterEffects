@@ -41,7 +41,7 @@ public final class ExportView extends View<ExportModel, ExportController> {
         max = 100;
         JPanel progressLine = new JPanel();
         progressLine.setLayout(new BoxLayout(progressLine, BoxLayout.X_AXIS));
-        jProgressBar = new JProgressBar();
+        jProgressBar = new JProgressBar(0, max);
         progress = new JLabel("0 %");
         content.setBorder(new EmptyBorder(10, 10, 10, 10));
 
