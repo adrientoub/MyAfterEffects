@@ -80,8 +80,8 @@ public class Image implements Media {
     }
 
     @Override
-    public File getFile() {
-        return file;
+    public void cleanFilters() {
+        getFilters().clear();
     }
 
     @Override

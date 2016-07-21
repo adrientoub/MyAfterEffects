@@ -65,17 +65,20 @@ public class Sequence implements Media {
     }
 
     @Override
-    public File getFile() {
-        return video.getFile();
+    public void cleanFilters() {
+        this.getFilters().clear();
     }
 
     @Override
     public Object clone() {
+        Sequence s = null;
         try {
-            return super.clone();
+            s = (Sequence)super.clone();
+            /* TODO Dangerous cast when we will change to media */
+            s.video = (Video)s.video.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-        return null;
+        return s;
     }
 }

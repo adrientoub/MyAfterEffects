@@ -40,6 +40,11 @@ public interface Media extends Cloneable {
      List<Filter> getFilters();
 
     /**
+     * Remove all filters to the Media
+     */
+    void cleanFilters();
+
+    /**
      * Get the duration of the Media on the Timeline
      * @return the duration in milliseconds
      */
@@ -51,13 +56,5 @@ public interface Media extends Cloneable {
      */
     String getName();
 
-    /**
-     * Get the file of the Media
-     * Used sor sequences in timeline
-     * @return the file of the Media
-     */
-    File getFile();
-
     Object clone();
-
 }

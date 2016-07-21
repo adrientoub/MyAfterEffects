@@ -130,17 +130,15 @@ public class Video implements Media {
     }
 
     @Override
-    public File getFile() {
-        return file;
+    public void cleanFilters() {
+        getFilters().clear();
     }
 
     @Override
     public Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
+        Media o = new Video(this.file);
+        getFilters().forEach(o::addFilter);
+        System.out.println("Cloned!");
+        return o;
     }
 }
