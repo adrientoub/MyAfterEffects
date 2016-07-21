@@ -48,6 +48,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
   EventInterval selected = null;
   /* Used fro Drag and Drop */
   private DropListener dropListener;
+  private Point position;
 
   public TimelineView(final Application application) {
     super(application);
@@ -161,6 +162,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       @Override
       public void mousePressed(MouseEvent e) {
         super.mousePressed(e);
+        position = e.getPoint();
         List<Interval> intervals = _tbv.getDelegate().getIntervalsAt(e.getX(), e.getY());
         if (intervals.size() > 0)
            selected = (EventInterval) intervals.get(0);
@@ -183,7 +185,10 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     // add a popup menu for the header
     Action action = new AbstractAction("HeaderAction") {
       public void actionPerformed(ActionEvent e) {
-        System.out.println("run " + getValue(NAME));
+        System.out.println("run " + position);
+
+        TimeBarRow lol =  _tbv.getRowForXY(position.x, position.y);
+        _tbv.getDelegate().rowRemoved(_tbv.getModel(), lol);
       }
     };
     menu = new JPopupMenu("Operations");
@@ -193,7 +198,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
     // add a popup menu for the time scale
     action = new AbstractAction("Move marker here") {
       public void actionPerformed(ActionEvent e) {
-        System.out.println("run " + getValue(NAME));
+        _tm.setDate(_tbv.getDelegate().dateForCoord(position.x, position.y));
       }
     };
     menu = new JPopupMenu("Operations");
