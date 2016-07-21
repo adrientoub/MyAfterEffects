@@ -60,6 +60,24 @@ public final class TimelineModel extends Model {
     return pairs;
   }
 
+  public static JaretDate getTimelineEnd() {
+    JaretDate last = new JaretDate(0, 0, 0, 0, 0, 0);
+    TimeBarModel model = getTbv().getModel();
+
+    for (int r = 0; r < model.getRowCount(); r++) {
+      TimeBarRow row = model.getRow(r);
+      ArrayList<Interval> intervals = (ArrayList<Interval>)row.getIntervals();
+
+      /* If that video is present on that date, add it to the list */
+      if (!intervals.isEmpty()) {
+        for (Interval i : intervals)
+        if (i.getEnd().diffMilliSeconds(last) > 0)
+          last = i.getEnd();
+      }
+    }
+    return last;
+  }
+
   public void add(Media media) {
     Timeline t = new Timeline(media);
     timelines.add(t);

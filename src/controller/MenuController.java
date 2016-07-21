@@ -37,6 +37,7 @@ public final class MenuController extends Controller<MenuModel, MenuView> {
                 this.model().exportVideo();
                 break;
             case "Render":
+                System.out.println(TimelineModel.getTimelineEnd().toDisplayString());
         /* TODO Adrien */
                 ArrayList<Pair<Long, Media>> medias = TimelineModel.getMediasAtDate(TimelineModel.getMarkerTime());
                 for (Pair<Long, Media> p : medias)
