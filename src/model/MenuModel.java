@@ -22,11 +22,10 @@ public final class MenuModel extends Model {
 
     public void newFile() throws IllegalArgumentException, IOException {
         JFileChooser jFileChooser = new JFileChooser();
+        jFileChooser.setMultiSelectionEnabled(true);
         jFileChooser.showOpenDialog(null);
-        File selected = jFileChooser.getSelectedFile();
-        if (selected == null)
-            throw new IllegalArgumentException("User didn't select any file.");
-        else {
+        File[] files = jFileChooser.getSelectedFiles();
+        for (File selected: files) {
             String extension = getExtension(selected);
             Media m;
             if (extension.equals("jpg") || extension.equals("png") || extension.equals("bmp") || extension.equals("jpeg") || extension.equals("gif"))
