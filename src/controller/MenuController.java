@@ -36,17 +36,6 @@ public final class MenuController extends Controller<MenuModel, MenuView> {
             case "Export":
                 this.model().exportVideo();
                 break;
-            case "Render":
-                System.out.println(TimelineModel.getTimelineEnd().toDisplayString());
-        /* TODO Adrien */
-                ArrayList<Pair<Long, Media>> medias = TimelineModel.getMediasAtDate(TimelineModel.getMarkerTime());
-                for (Pair<Long, Media> p : medias)
-                    System.out.println(p.getLeft() + " " + p.getRight().getName());
-
-        /* To change the marker */
-                MyAfterEffectsApp app = ((MyAfterEffectsApp) this.application());
-                app.getTimelineView().setMarkerTime(new JaretDate(0, 0, 0, 0, 0, 5));
-                break;
         }
     }
 }

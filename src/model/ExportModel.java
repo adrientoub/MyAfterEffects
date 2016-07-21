@@ -1,5 +1,6 @@
 package model;
 
+import app.MyAfterEffectsApp;
 import de.jaret.util.date.JaretDate;
 import framework.Application;
 import framework.Model;
@@ -19,28 +20,34 @@ public final class ExportModel extends Model {
 
     public void process(String path) {
         System.out.println("Process");
-        // TODO: handle end of media
-        int max = 100;
         long start = System.nanoTime();
-        int fps = 30;
-        int timeByFrame = 1000 / fps;
-        ExecutorService pool = Executors.newFixedThreadPool(2 * Runtime.getRuntime().availableProcessors());
+
+        // Options:
+        int max = ((MyAfterEffectsApp) application()).getOptionView().getFrames();
+        double fps = ((MyAfterEffectsApp) application()).getOptionView().getFps();
+        int timeByFrame = (int) (1000 / fps);
+        int threads = ((MyAfterEffectsApp) application()).getOptionView().getThreads();
+        int width = ((MyAfterEffectsApp) application()).getOptionView().getOutputWidth();
+        int height = ((MyAfterEffectsApp) application()).getOptionView().getOutputHeight();
+
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
         Queue<Future<Mat>> frames = new ArrayDeque<>();
         for (int i = 0; i < max; i++) {
             JaretDate jd = new JaretDate(0, 0, 0, 0, 0, 0);
             jd.advanceMillis(i * timeByFrame);
-            Callable<Mat> gf = new GenerateFrameAsMat(jd);
+            Callable<Mat> gf = new GenerateFrameAsMat(jd, width, height);
             Future<Mat> future = pool.submit(gf);
             frames.add(future);
         }
         System.out.println("Queued in " + (System.nanoTime() - start) / 1000000 + "ms");
         // Set correct size
+        // Use MJPEG because it works
         final int fourCC = VideoWriter.fourcc('M', 'J', 'P', 'G');
-        VideoWriter videoWriter = new VideoWriter(path, fourCC, fps, new Size(1280, 720), true);
+        VideoWriter videoWriter = new VideoWriter(path, fourCC, fps, new Size(width, height), true);
         if (videoWriter.isOpened()) {
             System.out.println("Opened");
         } else {
-            System.out.println("Closed");
+            System.err.println("Closed");
         }
         System.out.println("Created video in " + (System.nanoTime() - start) / 1000000 + "ms");
 

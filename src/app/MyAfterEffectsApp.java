@@ -7,7 +7,6 @@ import view.*;
 
 import javax.swing.*;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +14,7 @@ import java.util.Arrays;
 public final class MyAfterEffectsApp extends Application {
     private ExportView exportView;
     private TimelineView timelineView;
-    private TabbedView tabbedView;
+    private OptionView optionView;
     private PreviewView previewView;
 
     /**
@@ -25,7 +24,7 @@ public final class MyAfterEffectsApp extends Application {
      */
     protected void start(final JFrame frame) {
         timelineView = new TimelineView(this);
-        tabbedView = new TabbedView(this);
+        optionView = new OptionView(this);
         previewView = new PreviewView(this);
         exportView = new ExportView(this);
 
@@ -41,7 +40,7 @@ public final class MyAfterEffectsApp extends Application {
         frame.setJMenuBar(new MenuView(this).render());
         JSplitPane jSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         jSplitPane.setBottomComponent(timelineView.render());
-        JSplitPane topComponent = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabbedView.render(), previewView.render());
+        JSplitPane topComponent = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, optionView.render(), previewView.render());
         jSplitPane.setTopComponent(topComponent);
         frame.setContentPane(jSplitPane);
     }
@@ -86,8 +85,8 @@ public final class MyAfterEffectsApp extends Application {
         return timelineView;
     }
 
-    public TabbedView getTabbedView() {
-        return tabbedView;
+    public OptionView getOptionView() {
+        return optionView;
     }
 
     public PreviewView getPreviewView() {

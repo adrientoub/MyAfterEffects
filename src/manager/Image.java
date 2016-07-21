@@ -81,7 +81,6 @@ public class Image implements Media {
 
     @Override
     public double getFps() {
-        // TODO: check this value
         return 30;
     }
 

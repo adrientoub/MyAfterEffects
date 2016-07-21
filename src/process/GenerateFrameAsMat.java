@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 public class GenerateFrameAsMat implements Callable<Mat> {
     public JaretDate date;
 
-    public GenerateFrameAsMat(JaretDate date) {
+    public GenerateFrameAsMat(JaretDate date, int width, int height) {
         this.date = date;
     }
 

@@ -2,6 +2,7 @@ package view;
 
 // General utilities
 
+import app.MyAfterEffectsApp;
 import controller.ExportController;
 import framework.Application;
 import framework.View;
@@ -37,8 +38,7 @@ public final class ExportView extends View<ExportModel, ExportController> {
         view = new JFrame("Export");
         content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        // TODO: add video frame count as max
-        max = 100;
+        max = ((MyAfterEffectsApp) application()).getOptionView().getFrames();
         JPanel progressLine = new JPanel();
         progressLine.setLayout(new BoxLayout(progressLine, BoxLayout.X_AXIS));
         jProgressBar = new JProgressBar(0, max);
