@@ -326,7 +326,7 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
             System.out.println(lastFrame);
 
             EventInterval newMiddleInterval = new EventInterval(rect.endDate, interval.getEnd(),
-                    new Sequence((Video)interval.getMedia().clone(), firstFrame, lastFrame));
+                    new Sequence((Media) interval.getMedia().clone(), firstFrame, lastFrame));
 
             /* Add new interval to the timeline */
             ((DefaultTimeBarRowModel)rect.startRow).addInterval(newMiddleInterval);

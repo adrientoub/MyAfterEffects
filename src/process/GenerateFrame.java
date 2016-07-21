@@ -23,7 +23,6 @@ public class GenerateFrame implements Callable<BufferedImage> {
     @Override
     public BufferedImage call() throws Exception {
         ArrayList<Pair<Long, Media>> pairs = TimelineModel.getMediasAtDate(date);
-        System.out.println(date.getMillis());
         if (pairs.size() == 0) {
             System.err.println(":-(");
             return null;

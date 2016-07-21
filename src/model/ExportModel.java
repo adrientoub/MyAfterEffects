@@ -40,7 +40,13 @@ public final class ExportModel extends Model {
             frames.add(future);
         }
         // Set correct size
-        VideoWriter videoWriter = new VideoWriter(path, VideoWriter.fourcc('X', '2', '6', '4'), 30, new Size(1280, 720), true);
+        final int fourCC = VideoWriter.fourcc('X', 'V', 'I', 'D');
+        VideoWriter videoWriter = new VideoWriter(path, fourCC, 30, new Size(1280, 720), true);
+        if (videoWriter.isOpened()) {
+            System.out.println("Opened");
+        } else {
+            System.out.println("Closed");
+        }
 
         for (int i = 0; i < frames.size(); i++) {
             Future<BufferedImage> future = frames.poll();
@@ -58,6 +64,6 @@ public final class ExportModel extends Model {
                 e.printStackTrace();
             }
         }
-        videoWriter.release();
+        //videoWriter.release();
     }
 }

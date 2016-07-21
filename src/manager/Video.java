@@ -23,7 +23,7 @@ public class Video implements Media {
     private double fps;
     private int nbFrames;
     private long duration;
-    private VideoCapture videoCapture;
+    private final VideoCapture videoCapture;
     private File file;
     private Dimension resolution;
 
@@ -36,7 +36,7 @@ public class Video implements Media {
 
     public static BufferedImage Mat2bufferedImage(Mat image) {
         int bufferSize = image.channels() * image.cols() * image.rows();
-        byte [] bytes = new byte[bufferSize];
+        byte[] bytes = new byte[bufferSize];
         image.get(0, 0, bytes);
         BufferedImage img = new BufferedImage(image.width(), image.height(), BufferedImage.TYPE_3BYTE_BGR);
         final byte[] targetPixels = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
@@ -52,7 +52,7 @@ public class Video implements Media {
         double height = videoCapture.get(CAP_PROP_FRAME_HEIGHT);
         fps = videoCapture.get(CAP_PROP_FPS);
         double frameCount = videoCapture.get(CAP_PROP_FRAME_COUNT);
-        nbFrames = (int)frameCount;
+        nbFrames = (int) frameCount;
         resolution = new Dimension((int) width, (int) height);
 
         System.out.println("Width: " + width);
@@ -78,11 +78,15 @@ public class Video implements Media {
     public BufferedImage getImage(int frameNb) {
         ImageIO.setUseCache(false);
         Mat frame = new Mat();
-        videoCapture.set(CAP_PROP_POS_FRAMES, frameNb);
+        boolean success;
+        synchronized (videoCapture) {
+            videoCapture.set(CAP_PROP_POS_FRAMES, frameNb);
+            success = videoCapture.read(frame);
+        }
 
-        if (videoCapture.read(frame)) {
+        if (success) {
             BufferedImage image = Mat2bufferedImage(frame);
-            for (Filter filter: filters) {
+            for (Filter filter : filters) {
                 image = filter.applyFilter(image);
             }
             return image;
@@ -101,6 +105,7 @@ public class Video implements Media {
         return this.filters;
     }
 
+    @Override
     public double getFps() {
         return fps;
     }
