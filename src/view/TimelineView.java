@@ -249,21 +249,27 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       item.addActionListener(e -> {
         if (selected != null) {
           if (f instanceof ChromaKey) {
+            int threshold = 3;
             JFrame colors = new JFrame("Pick a color");
+            colors.setLayout(new BoxLayout(colors.getContentPane(), BoxLayout.PAGE_AXIS));
             JColorChooser tcc = new JColorChooser(Color.green);
             colors.add(tcc, BorderLayout.PAGE_START);
 
             JButton select = new JButton("Select");
-            select.addActionListener(new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent e) {
-                selected.addFilter(new ChromaKey(tcc.getColor()));
-                TimelineView.this.emit("filter:applied", TimelineView.this.getMarkerTime());
-                colors.dispatchEvent(new WindowEvent(colors, WindowEvent.WINDOW_CLOSING));
-              }
+
+            JSpinner thresholdSpinner = new JSpinner(new SpinnerNumberModel(3, 0, 255, 1));
+
+            select.addActionListener(e1 -> {
+              System.out.println(thresholdSpinner.getValue());
+              selected.addFilter(new ChromaKey(tcc.getColor(), (int)thresholdSpinner.getValue()));
+              TimelineView.this.emit("filter:applied", TimelineView.this.getMarkerTime());
+              colors.dispatchEvent(new WindowEvent(colors, WindowEvent.WINDOW_CLOSING));
             });
 
-            colors.add(select, BorderLayout.PAGE_END);
+            colors.add(thresholdSpinner, BoxLayout.Y_AXIS);
+            colors.add(new JLabel("Threshold:"), BoxLayout.Y_AXIS);
+            colors.add(select, BoxLayout.Y_AXIS);
+
             colors.pack();
             colors.setVisible(true);
           }
