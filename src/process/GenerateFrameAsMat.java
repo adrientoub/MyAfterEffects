@@ -16,10 +16,14 @@ import java.util.concurrent.Callable;
  * Created by Adrien on 20/07/2016.
  */
 public class GenerateFrameAsMat implements Callable<Mat> {
-    public JaretDate date;
+    private JaretDate date;
+    private int width;
+    private int height;
 
     public GenerateFrameAsMat(JaretDate date, int width, int height) {
         this.date = date;
+        this.width = width;
+        this.height = height;
     }
 
     @Override
@@ -27,7 +31,16 @@ public class GenerateFrameAsMat implements Callable<Mat> {
         BufferedImage bi = new GenerateFrame(date).call();
         if (bi == null)
             return null;
-        Mat mat = Video.bufferedImageToMat(bi);
-        return mat;
+        if (bi.getWidth() != width || bi.getHeight() != height) {
+            Image tmp = bi.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            BufferedImage scaledBi = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+
+            Graphics graphics = scaledBi.createGraphics();
+            graphics.drawImage(tmp, 0, 0, null);
+            graphics.dispose();
+
+            bi = scaledBi;
+        }
+        return Video.bufferedImageToMat(bi);
     }
 }
