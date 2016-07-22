@@ -248,9 +248,30 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       JMenuItem item = submenu.getItem(submenu.getItemCount() - 1);
       item.addActionListener(e -> {
         if (selected != null) {
-          String filterString = ((JMenuItem)e.getSource()).getText();
-          selected.addFilter(filters.stream().filter(choice -> choice.getClass().getSimpleName().equals(filterString)).findFirst().get());
-          TimelineView.this.emit("filter:applied", TimelineView.this.getMarkerTime());
+          if (f instanceof ChromaKey) {
+            JFrame colors = new JFrame("Pick a color");
+            JColorChooser tcc = new JColorChooser(Color.green);
+            colors.add(tcc, BorderLayout.PAGE_START);
+
+            JButton select = new JButton("Select");
+            select.addActionListener(new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                selected.addFilter(new ChromaKey(tcc.getColor()));
+                TimelineView.this.emit("filter:applied", TimelineView.this.getMarkerTime());
+                colors.dispatchEvent(new WindowEvent(colors, WindowEvent.WINDOW_CLOSING));
+              }
+            });
+
+            colors.add(select, BorderLayout.PAGE_END);
+            colors.pack();
+            colors.setVisible(true);
+          }
+          else {
+            String filterString = ((JMenuItem) e.getSource()).getText();
+            selected.addFilter(filters.stream().filter(choice -> choice.getClass().getSimpleName().equals(filterString)).findFirst().get());
+            TimelineView.this.emit("filter:applied", TimelineView.this.getMarkerTime());
+          }
         }
       });
     }
