@@ -15,6 +15,7 @@
 | 16 |        103       |      228| 113| 428 |
 | 32|        105        |      226| 114| 428 |
 
+![](graphs/benchmark_i5-3570K.png)
 
 ### Benchmark with i7-3770K
 
