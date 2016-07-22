@@ -26,7 +26,8 @@ public final class ExportModel extends Model {
         double fps = ((MyAfterEffectsApp) application()).getOptionView().getFps();
         int max = ((MyAfterEffectsApp) application()).getOptionView().getFrames();
         if (max == 0) {
-            max = (int) ((TimelineModel.getTimelineEnd().getMillis() / 1000) * fps);
+            long ms = TimelineModel.getTimelineEnd().diffMilliSeconds(new JaretDate(0, 0, 0, 0, 0, 0));
+            max = (int) ((ms / 1000.0) * fps);
         }
         int timeByFrame = (int) (1000 / fps);
         int threads = ((MyAfterEffectsApp) application()).getOptionView().getThreads();

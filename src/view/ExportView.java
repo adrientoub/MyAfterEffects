@@ -4,9 +4,11 @@ package view;
 
 import app.MyAfterEffectsApp;
 import controller.ExportController;
+import de.jaret.util.date.JaretDate;
 import framework.Application;
 import framework.View;
 import model.ExportModel;
+import model.TimelineModel;
 import process.ProcessThreaded;
 
 import javax.swing.*;
@@ -38,7 +40,12 @@ public final class ExportView extends View<ExportModel, ExportController> {
         view = new JFrame("Export");
         content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        double fps = ((MyAfterEffectsApp) application()).getOptionView().getFps();
         max = ((MyAfterEffectsApp) application()).getOptionView().getFrames();
+        if (max == 0) {
+            long ms = TimelineModel.getTimelineEnd().diffMilliSeconds(new JaretDate(0, 0, 0, 0, 0, 0));
+            max = (int) ((ms / 1000) * fps);
+        }
         JPanel progressLine = new JPanel();
         progressLine.setLayout(new BoxLayout(progressLine, BoxLayout.X_AXIS));
         jProgressBar = new JProgressBar(0, max);
