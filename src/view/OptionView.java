@@ -7,23 +7,44 @@ import model.OptionModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
 public final class OptionView extends View<OptionModel, OptionController> {
-    private JSpinner threads;
-    private JSpinner height;
-    private JSpinner width;
-    private JSpinner fps;
-    private JSpinner frames;
+    private JSpinner threadsSpinner;
+    private int threads;
+    private JSpinner heightSpinner;
+    private int height = 720;
+    private JSpinner widthSpinner;
+    private int width = 1280;
+    private JSpinner fpsSpinner;
+    private double fps = 30.0;
+    private JSpinner framesSpinner;
+    private int frames = 100;
 
     public OptionView(final Application application) {
         super(application);
 
-        height = new JSpinner(new SpinnerNumberModel(720, 0, 2560, 1));
-        width = new JSpinner(new SpinnerNumberModel(1280, 0, 2560, 1));
-        fps = new JSpinner(new SpinnerNumberModel(30.0, 0.0, 60.0, 1.0));
-        frames = new JSpinner(new SpinnerNumberModel(100, 0, 60000, 5));
-        threads = new JSpinner(new SpinnerNumberModel(Runtime.getRuntime().availableProcessors() * 2, 0, 256, 1));
+        // Set threads to 2 times the number of available core
+        threads = Runtime.getRuntime().availableProcessors() * 2;
+
+        heightSpinner = new JSpinner(new SpinnerNumberModel(height, 0, 2560, 1));
+        heightSpinner.addChangeListener(changeEvent ->
+                height = ((SpinnerNumberModel)((JSpinner)changeEvent.getSource()).getModel()).getNumber().intValue());
+
+        widthSpinner = new JSpinner(new SpinnerNumberModel(width, 0, 2560, 1));
+        widthSpinner.addChangeListener(changeEvent ->
+                width = ((SpinnerNumberModel)((JSpinner)changeEvent.getSource()).getModel()).getNumber().intValue());
+
+        fpsSpinner = new JSpinner(new SpinnerNumberModel(fps, 0.0, 60.0, 1.0));
+        fpsSpinner.addChangeListener(changeEvent ->
+                fps = ((SpinnerNumberModel)((JSpinner)changeEvent.getSource()).getModel()).getNumber().doubleValue());
+
+        framesSpinner = new JSpinner(new SpinnerNumberModel(frames, 0, 60000, 5));
+        framesSpinner.addChangeListener(changeEvent ->
+                frames = ((SpinnerNumberModel)((JSpinner)changeEvent.getSource()).getModel()).getNumber().intValue());
+
+        threadsSpinner = new JSpinner(new SpinnerNumberModel(threads, 0, 256, 1));
+        threadsSpinner.addChangeListener(changeEvent ->
+                threads = ((SpinnerNumberModel)((JSpinner)changeEvent.getSource()).getModel()).getNumber().intValue());
 
         this.model(new OptionModel(application));
         this.controller(new OptionController(application));
@@ -33,37 +54,36 @@ public final class OptionView extends View<OptionModel, OptionController> {
         JPanel viewPanel = new JPanel();
         viewPanel.setLayout(new GridLayout(5, 2, 2, 5));
         viewPanel.add(new JLabel("FPS: "));
-        viewPanel.add(fps);
+        viewPanel.add(fpsSpinner);
         viewPanel.add(new JLabel("Frames to render: "));
-        viewPanel.add(frames);
+        viewPanel.add(framesSpinner);
         viewPanel.add(new JLabel("Width: "));
-        viewPanel.add(width);
+        viewPanel.add(widthSpinner);
         viewPanel.add(new JLabel("Height: "));
-        viewPanel.add(height);
+        viewPanel.add(heightSpinner);
         viewPanel.add(new JLabel("Render Threads: "));
-        viewPanel.add(threads);
+        viewPanel.add(threadsSpinner);
 
         return viewPanel;
     }
 
     public int getThreads() {
-        return (int) threads.getValue();
+        return threads;
     }
 
-
     public int getOutputHeight() {
-        return (int) height.getValue();
+        return height;
     }
 
     public int getOutputWidth() {
-        return (int) width.getValue();
+        return width;
     }
 
     public double getFps() {
-        return (double) fps.getValue();
+        return fps;
     }
 
     public int getFrames() {
-        return (int) frames.getValue();
+        return frames;
     }
 }

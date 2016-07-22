@@ -30,6 +30,7 @@ public final class ExportModel extends Model {
         int width = ((MyAfterEffectsApp) application()).getOptionView().getOutputWidth();
         int height = ((MyAfterEffectsApp) application()).getOptionView().getOutputHeight();
 
+        System.out.println("Exporting " + max + " frames using " + threads + " threads.");
         ExecutorService pool = Executors.newFixedThreadPool(threads);
         Queue<Future<Mat>> frames = new ArrayDeque<>();
         for (int i = 0; i < max; i++) {
@@ -73,7 +74,7 @@ public final class ExportModel extends Model {
         }
         this.emit("media:exportProgress", max);
         videoWriter.release();
-        System.out.println("Released");
+        System.out.println("Exported " + max + " frames using " + threads + " threads.");
         System.out.println("Exported in " + (System.nanoTime() - start) / 1000000 + "ms (" + ((System.nanoTime() - transcodeStart) / 1000000) / max + "ms per frame).");
         pool.shutdown();
     }
