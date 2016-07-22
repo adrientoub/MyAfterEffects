@@ -32,6 +32,8 @@
 | 16 |        100|      288| 202| 930|
 | 32|        100|      318| 220| 937|
 
+![](graphs/benchmark_i7-3770K.png)
+
 ### Benchmark with i7-4700HQ
 
 * CPU : i7 4700HQ 2.4GHz 4 Cores (8 threads)
@@ -46,3 +48,5 @@
 | 8 |        97|      204| 179| 555|
 | 16 |        95|      208| 174| 552|
 | 32|        96|      209| 181| 544|
+
+![](graphs/benchmark_i7-4700HQ.png)
