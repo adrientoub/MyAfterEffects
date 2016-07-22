@@ -2,6 +2,10 @@
 
 ### Benchmark with I5-3570K ###
 
+CPU : I5-3570K 3.40 Ghz 4 cores
+RAM : 12Go
+Disk : Samsung SSD 840 Series
+
 | Thread count |  1 video with no filter | 1 video with Border Detection |  2 videos with 1 Transparency | 3 videos with 1 LowPass, 1 Sharpen, 2 transparency |
 | ------------- |: -------------: | ---------: |: ---------: |: ---------: |
 | 1 |        103        |      554| 193| 1265|
