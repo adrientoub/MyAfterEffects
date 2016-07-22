@@ -44,7 +44,7 @@ public final class ExportView extends View<ExportModel, ExportController> {
         max = ((MyAfterEffectsApp) application()).getOptionView().getFrames();
         if (max == 0) {
             long ms = TimelineModel.getTimelineEnd().diffMilliSeconds(new JaretDate(0, 0, 0, 0, 0, 0));
-            max = (int) ((ms / 1000) * fps);
+            max = (int) ((ms / 1000.0) * fps);
         }
         JPanel progressLine = new JPanel();
         progressLine.setLayout(new BoxLayout(progressLine, BoxLayout.X_AXIS));
