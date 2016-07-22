@@ -2,9 +2,9 @@
 
 ### Benchmark with I5-3570K ###
 
-CPU : I5-3570K 3.40 Ghz 4 cores
-RAM : 12Go
-Disk : Samsung SSD 840 Series
+* CPU : i5-3570K 3.40 Ghz 4 cores
+* RAM : 12Go 1333MHz DDR3
+* Disk : 128Go Samsung SSD 840 Series
 
 | Thread count |  1 video with no filter | 1 video with Border Detection |  2 videos with 1 Transparency | 3 videos with 1 LowPass, 1 Sharpen, 2 transparency |
 | ------------- |: -------------: | ---------: |: ---------: |: ---------: |
@@ -18,6 +18,10 @@ Disk : Samsung SSD 840 Series
 
 ### Benchmark with i7-3770K ###
 
+* CPU : i7 3770K 3.50GHz 4 Cores (8 threads)
+* RAM : 16384 MB RAM (4 * 4096 MB Crucial Balistix Sport 1600MHz) DDR3
+* Disk : 2 TB Seagate Drive (7200 RPM)
+
 | Thread count |  1 video with no filter | 1 video with Border Detection |  2 videos with 1 Transparency | 3 videos with 1 LowPass, 1 Sharpen, 2 transparency |
 | ------------- |: -------------: | ---------: |: ---------: |: ---------: |
 | 1 |        71|      644| 272| 1640|
@@ -28,6 +32,10 @@ Disk : Samsung SSD 840 Series
 | 32|        100|      318| 220| 937|
 
 ### Benchmark with i7-4700HQ ###
+
+* CPU : i7 4700HQ 2.4GHz 4 Cores (8 threads)
+* RAM : 12288 MB RAM (1 * 8192 MB and 1 * 4096 MB 1600MHz) DDR3
+* Disk : 960 GB SanDisk Ultra II SSD
 
 | Thread count |  1 video with no filter | 1 video with Border Detection |  2 videos with 1 Transparency | 3 videos with 1 LowPass, 1 Sharpen, 2 transparency |
 | ------------- |: -------------: | ---------: |: ---------: |: ---------: |
