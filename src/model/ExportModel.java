@@ -23,8 +23,11 @@ public final class ExportModel extends Model {
         long start = System.nanoTime();
 
         // Options:
-        int max = ((MyAfterEffectsApp) application()).getOptionView().getFrames();
         double fps = ((MyAfterEffectsApp) application()).getOptionView().getFps();
+        int max = ((MyAfterEffectsApp) application()).getOptionView().getFrames();
+        if (max == 0) {
+            max = (int) ((TimelineModel.getTimelineEnd().getMillis() / 1000) * fps);
+        }
         int timeByFrame = (int) (1000 / fps);
         int threads = ((MyAfterEffectsApp) application()).getOptionView().getThreads();
         int width = ((MyAfterEffectsApp) application()).getOptionView().getOutputWidth();
