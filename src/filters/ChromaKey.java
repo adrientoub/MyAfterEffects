@@ -9,12 +9,10 @@ import java.awt.image.BufferedImage;
 public class ChromaKey implements Filter {
     private Color color;
     final private int threshold = 3;
-    final private int transparentRgba;
+    final private int transparentRgba = new Color(255, 255, 255, 0).getRGB();
 
     public ChromaKey(Color color) {
         this.color = color;
-        Color transparent = new Color(255, 255, 255, 255);
-        transparentRgba = transparent.getRGB();
     }
 
     private boolean isInRange(Color original) {
