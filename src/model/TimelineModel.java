@@ -9,6 +9,7 @@ import de.jaret.util.ui.timebars.model.TimeBarModel;
 import de.jaret.util.ui.timebars.model.TimeBarRow;
 import de.jaret.util.ui.timebars.swing.TimeBarViewer;
 import filters.*;
+import filters.Transparency;
 import framework.Application;
 import framework.Model;
 import manager.Media;
@@ -43,6 +44,7 @@ public final class TimelineModel extends Model {
     hashtable.put("BorderDetection", new BorderDetection());
     hashtable.put("Sepia", new Sepia());
     hashtable.put("Sharpen", new Sharpen());
+    hashtable.put("Transparency", new Transparency());
   }
 
   public static ArrayList<Pair<Long, Media>> getMediasAtDate(JaretDate date) {
