@@ -42,6 +42,7 @@ public final class TimelineModel extends Model {
     hashtable.put("LowPass", new LowPass());
     hashtable.put("BorderDetection", new BorderDetection());
     hashtable.put("Sepia", new Sepia());
+    hashtable.put("Sharpen", new Sharpen());
   }
 
   public static ArrayList<Pair<Long, Media>> getMediasAtDate(JaretDate date) {
