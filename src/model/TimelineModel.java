@@ -36,6 +36,7 @@ public final class TimelineModel extends Model {
   private void initFilters() {
     hashtable = new HashMap<>();
     hashtable.put("Binarize", new Binarize());
+    hashtable.put("BorderDetection", new BorderDetection());
     hashtable.put("ChromaKey", new ChromaKey(Color.green));
     hashtable.put("Grayscale", new Grayscale());
     hashtable.put("LowPass", new LowPass());
