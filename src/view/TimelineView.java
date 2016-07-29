@@ -1,6 +1,7 @@
 
 package view;
 
+import app.MyAfterEffectsApp;
 import controller.TimelineController;
 import de.jaret.util.date.Interval;
 import de.jaret.util.date.JaretDate;
@@ -294,13 +295,16 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
       super("Play video");
       _tbv = tbv;
     }
+
     public void actionPerformed(ActionEvent e) {
+      double fps = ((MyAfterEffectsApp) application()).getOptionView().getFps();
+      int duration = (int) (1000 / fps);
+      System.out.println("Playing video at " + fps + " FPS");
 
-      final Timer timer = new Timer(40, null);
+      final Timer timer = new Timer(duration, null);
       ActionListener al = new ActionListener() {
-
         public void actionPerformed(ActionEvent e) {
-          JaretDate deltaDate = _tm.getDate().copy().advanceMillis(100);
+          JaretDate deltaDate = _tm.getDate().copy().advanceMillis(duration);
           _tm.setDate(deltaDate);
           TimelineView.this.emit("marker:changed", deltaDate);
           if (_tm.getDate().compareTo(_tbv.getModel().getMaxDate())> 0 || TimelineView.this.stopped) {
@@ -308,16 +312,14 @@ public final class TimelineView extends View<TimelineModel, TimelineController> 
             timer.stop();
           }
         }
-
       };
 
       timer.addActionListener(al);
       timer.setRepeats(true);
-      timer.setDelay(40);
+      timer.setDelay(duration);
       TimelineView.this.stopped = false;
       timer.start();
     }
-
   }
 
   class PauseMarkerAction extends AbstractAction {
