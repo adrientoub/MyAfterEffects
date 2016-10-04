@@ -41,6 +41,7 @@ public final class TimelineModel extends Model {
     hashtable.put("ChromaKey", new ChromaKey(Color.green, 3));
     hashtable.put("Grayscale", new Grayscale());
     hashtable.put("LowPass", new LowPass());
+    hashtable.put("Cartoonify", new Cartoonify());
     hashtable.put("BorderDetection", new BorderDetection());
     hashtable.put("Sepia", new Sepia());
     hashtable.put("Sharpen", new Sharpen());
