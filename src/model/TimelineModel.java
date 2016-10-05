@@ -38,15 +38,15 @@ public final class TimelineModel extends Model {
     hashtable = new HashMap<>();
     hashtable.put("Binarize", new Binarize());
     hashtable.put("Otsu Binarize", new OtsuBinarize());
-    hashtable.put("BorderDetection", new BorderDetection());
     hashtable.put("ChromaKey", new ChromaKey(Color.green, 3));
     hashtable.put("Grayscale", new Grayscale());
     hashtable.put("LowPass", new LowPass());
     hashtable.put("Cartoonify", new Cartoonify());
-    hashtable.put("BorderDetection", new BorderDetection());
+    hashtable.put("Detect Borders", new BorderDetection());
     hashtable.put("Sepia", new Sepia());
     hashtable.put("Sharpen", new Sharpen());
     hashtable.put("Transparency", new Transparency());
+    hashtable.put("Quantize", new QuantizeColors());
   }
 
   public static ArrayList<Pair<Long, Media>> getMediasAtDate(JaretDate date) {
