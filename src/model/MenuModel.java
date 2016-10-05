@@ -9,8 +9,11 @@ import manager.Video;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 public final class MenuModel extends Model {
+    private final String extension = "png";
+
     public MenuModel(final Application application) {
         super(application);
     }
@@ -49,6 +52,12 @@ public final class MenuModel extends Model {
 
             this.emit("media:export", path);
         }
+    }
+
+
+    public void saveImage() {
+        String filename = new Date().getTime() + "." + extension;
+        this.emit("media:screenshot", filename);
     }
 
     public void exit(int i) {

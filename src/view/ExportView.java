@@ -9,10 +9,13 @@ import framework.Application;
 import framework.View;
 import model.ExportModel;
 import model.TimelineModel;
+import process.GenerateFrame;
 import process.ProcessThreaded;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.io.File;
 
 /**
  * The {@link ExportView} class takes care of rendering the view for creating,
@@ -32,7 +35,20 @@ public final class ExportView extends View<ExportModel, ExportController> {
         this.controller(new ExportController(application));
 
         this.on("media:export", this::handle);
+        this.on("media:screenshot", this::screenshot);
         this.on("media:exportProgress", this::setProgress);
+    }
+
+    private void screenshot(String path) {
+        System.out.println("Saving screenshot to " + path);
+
+        GenerateFrame gf = new GenerateFrame(TimelineModel.getMarkerTime());
+        try {
+            ImageIO.write(gf.call(), "png", new File(path));
+            System.out.println("Saved successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void handle(String path) {

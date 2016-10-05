@@ -1,19 +1,12 @@
 
 package controller;
 
-import app.MyAfterEffectsApp;
-import de.jaret.util.date.JaretDate;
-import de.jaret.util.misc.Pair;
 import framework.Application;
 import framework.Controller;
-import manager.Media;
 import model.MenuModel;
-import model.TimelineModel;
 import view.MenuView;
-import view.TimelineView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public final class MenuController extends Controller<MenuModel, MenuView> {
 
@@ -32,6 +25,9 @@ public final class MenuController extends Controller<MenuModel, MenuView> {
                 } catch (IllegalArgumentException | IOException e) {
                     System.err.println(e.getMessage());
                 }
+                break;
+            case "Save":
+                this.model().saveImage();
                 break;
             case "Export":
                 this.model().exportVideo();
