@@ -57,7 +57,16 @@ public class Video implements Media {
         int bufferSize = image.channels() * image.cols() * image.rows();
         byte[] bytes = new byte[bufferSize];
         image.get(0, 0, bytes);
-        int type = image.channels() == 3 ? BufferedImage.TYPE_3BYTE_BGR: BufferedImage.TYPE_4BYTE_ABGR;
+        int type = 0;
+        if (image.channels() == 3)
+            type = BufferedImage.TYPE_3BYTE_BGR;
+        else if (image.channels() == 4)
+            type = BufferedImage.TYPE_4BYTE_ABGR;
+        else if (image.channels() == 1)
+            type = BufferedImage.TYPE_BYTE_GRAY;
+        else
+            System.err.println("UNKNOWN IMAGE TYPE");
+
         BufferedImage img = new BufferedImage(image.width(), image.height(), type);
         final byte[] targetPixels = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
         System.arraycopy(bytes, 0, targetPixels, 0, bytes.length);
