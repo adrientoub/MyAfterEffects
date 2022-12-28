@@ -1,39 +1,36 @@
-group 'myaftereffects'
-version '1.0'
+plugins {
+    id 'application'
+}
 
-apply plugin: 'java'
-apply plugin: 'application'
-apply plugin: 'idea'
+base {
+    group = 'myaftereffects'
+    version = '1.0'
+}
 
-mainClassName = 'app.MyAfterEffectsApp'
-sourceSets.main.java.srcDirs = ['src']
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 repositories {
     mavenCentral()
 }
 
-idea {
-    module {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
 dependencies {
-    compile files('lib/timebars/jaretutil-0.32.jar')
-    compile files('lib/timebars/timebars-1.49.jar')
-    compile files('lib/opencv/opencv-310.jar')
-    compile files('lib/ffmpeg/ffmpeg-windows-x86_64.jar')
+    implementation files('lib/timebars/jaretutil-0.32.jar')
+    implementation files('lib/timebars/timebars-1.49.jar')
+    implementation files('lib/opencv/opencv-310.jar')
+    implementation files('lib/ffmpeg/ffmpeg-windows-x86_64.jar')
 }
-jar {
-    manifest {
-        attributes(
-                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-Class': mainClassName
-        )
-    }
+
+application {
+    mainClass = 'app.MyAfterEffectsApp'
 }
-task copyDepJars(type: Copy) {
-    from configurations.compile
-    into 'build/libs'
-}
-build.finalizedBy(copyDepJars)

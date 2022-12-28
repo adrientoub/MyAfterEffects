@@ -58,7 +58,7 @@ All DLL files (shared libraries) needed are already provided with this repositor
 
 Requirements are:
 
-* Gradle 2.12 or later (you can install it using Chocolatey)
+* Gradle 7.6
 * Java 8
 
 ### Linux x64
@@ -66,7 +66,7 @@ Requirements are:
 Requirements are:
 
 * Java 8
-* Gradle 2.12 or later
+* Gradle 7.6
 * OpenCV 3.1.0
 
 ## Usage
